@@ -1,0 +1,107 @@
+import React, { useRef, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import "./Homepage.css";
+
+const Homepage = () => {
+  const fileInputRef = useRef(null);
+  const [file, setFile] = useState(null);
+  const [uploading, setUploading] = useState(false);
+  const [action, setAction] = useState("match");
+  const navigate = useNavigate();
+
+  const handleUpload = () => {
+    if (!file || !action) return;
+    setUploading(true);
+
+    setTimeout(() => {
+      setUploading(false);
+      setFile(null);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
+      navigate("/Login");
+    }, 500);
+  };
+
+  return (
+    <div className="background-container">
+      <header className="header-layout">
+        <div className="header-title">Resume-to-job Matcher</div>
+        <nav className="header-nav">
+          <ul className="header-menu">
+            <li className="header-menu-item">
+              <Link to="/Login" className="header-link">
+                Login
+              </Link>
+            </li>
+            <li className="header-menu-item">
+              <Link to="/SignUp" className="header-link">
+                SignUp
+              </Link>
+            </li>
+          </ul>
+        </nav>
+      </header>
+
+      <section className="placeorder-overlay">
+        <article>
+          <h2>Upload Your Resume to Find Matching Job Opportunities</h2>
+          <input
+            id="resume-upload"
+            type="file"
+            className="file-upload-section"
+            ref={fileInputRef}
+            onChange={(e) => setFile(e.target.files[0])}
+            accept=".pdf,.doc,.docx,.txt"
+            required
+          />
+          <button
+            onClick={handleUpload}
+            disabled={uploading || !file}
+            className="upload-btn"
+          >
+            {uploading ? "Analyzing..." : "Upload and Match"}
+          </button>
+        </article>
+      </section>
+
+      <section className="services">
+        <h2>Key Features</h2>
+        <div className="service-cards">
+          <div className="service-card">
+            <h3>Skill Extraction</h3>
+            <p>
+              Automatically extract technical and soft skills from your resume
+              using AI and NLP.
+            </p>
+          </div>
+          <div className="service-card">
+            <h3>Live Job Matching</h3>
+            <p>
+              Instantly match your profile with real-time job listings from
+              multiple platforms.
+            </p>
+          </div>
+          <div className="service-card">
+            <h3>Smart Recommendations</h3>
+            <p>
+              Receive personalized job suggestions based on your resume content
+              and experience.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section className="about-us">
+        <h2>About Us</h2>
+        <p>
+          Our AI-powered platform helps job seekers find tailored job
+          opportunities by intelligently analyzing resumes and comparing them
+          with real-time job listings via public APIs.
+        </p>
+      </section>
+    </div>
+  );
+};
+
+export default Homepage;

@@ -1,0 +1,161 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body, html {
+  height: 100%;
+  width: 100%;
+  font-family: 'Montserrat', sans-serif;
+  background: center/cover no-repeat fixed;
+  background-color: rgba(0, 0, 0, 0.6);
+  background-blend-mode: darken;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+body::-webkit-scrollbar {
+  display: none;
+}
+
+  .signup-container {
+    backdrop-filter: blur(5px);
+    background-color: rgba(255, 255, 255, 0.1);
+    min-height: 100vh;
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 80px;
+    overflow-x: hidden;
+    position: relative;
+  }
+  .header-layout {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.273);
+    color: white;
+    padding: 15px 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: "Cambria", Cochin, Georgia, Times, "Times New Roman", serif;
+    font-size: 30px;
+    font-weight: 900;
+    z-index: 5;
+    }
+  .header-title {
+    font-family: "Courier New", Courier, monospace;
+    padding-left: 10px;
+  }
+  
+  .header-nav .header-menu {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .header-menu-item {
+    margin-right: 10px;
+  }
+  
+  .header-menu-item:hover {
+    transform: scale(1.1);
+  }
+  
+  .header-link {
+    color: white;
+    text-decoration: none;
+  }
+  
+  .header-link:hover {
+    text-decoration: underline;
+  }
+  
+  .glass-card-signup {
+    margin-top: 40px;
+    background-color: rgba(255, 255, 255, 0.5);
+    color: #000;
+    border-radius: 16px;
+    padding: 2rem;
+    width: 90%;
+    max-width: 1000px;
+    margin-bottom: 2rem;
+    text-align: center;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  }
+  
+  
+  .glass-card-signup h2 {
+    font-size: 2.4rem;
+    margin-bottom: 1rem;
+    font-weight: bold;
+  }
+  
+  .glass-card-signup input,
+  .glass-card-signup select {
+    width: 100%;
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+    border-radius: 8px;
+    border: none;
+    outline: none;
+    background: rgba(255, 255, 255, 0.6);
+    color: rgb(0, 0, 0);
+  }
+  
+  .glass-card-signup input::placeholder {
+    color: rgb(0, 0, 0);
+  }
+  
+  .glass-card-signup select {
+    color: #000000;
+  }
+  
+  .glass-card-signup button {
+    width: 100%;
+    padding: 0.75rem;
+    border: none;
+    border-radius: 10px;
+    background-color: rgba(255, 255, 255, 0.762);
+    color: rgb(0, 0, 0);
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+  }
+  
+  .glass-card-signup button:hover {
+    opacity: 0.9;
+  }
+  
+  .login-link {
+    margin-top: 1rem;
+    font-size: 1.4rem;
+  }
+  
+  .login-link a {
+    color: #0800ff;
+    text-decoration: none;
+  }
+  
+  .login-link a:hover {
+    text-decoration: underline;
+  }
+  
+  @media (max-width: 768px) {
+    .header-title {
+      font-size: 2rem;
+    }
+  
+    .header-link {
+      font-size: 2rem;
+    }
+  }
+  
