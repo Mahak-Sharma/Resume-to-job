@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Homepage from "./HomePage.jsx";
 import Login from "./Login.jsx";
 import Signup from "./SignUp.jsx";
+import Data from "./Data.jsx";
 const App = () => {
   return (
     <Router>
@@ -11,6 +12,7 @@ const App = () => {
         <Route path="/" element={<Homepage />} />
         <Route path="/SignUp" element={<Signup />} />
         <Route path="/Login" element={<Login />} />
+        <Route path="/Data" element={<Data />} />
       </Routes>
     </Router>
   );

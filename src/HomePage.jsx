@@ -1,41 +1,78 @@
-import axios from "axios";
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import AWS from "aws-sdk";
 import "./Homepage.css";
 
 const Homepage = () => {
   const fileInputRef = useRef(null);
   const [file, setFile] = useState(null);
   const [uploading, setUploading] = useState(false);
-  const [action, setAction] = useState("match");
+  const [userEmail, setUserEmail] = useState(null);
   const navigate = useNavigate();
 
-  const handleUpload = async () => {
-    if (!file || !action) return;
+  useEffect(() => {
+    const email = sessionStorage.getItem("userEmail");
+    setUserEmail(email);
+  }, []);
 
-    setUploading(true);
+  useEffect(() => {
+    if (userEmail) {
+      sessionStorage.setItem("userEmail", userEmail);
+    }
+  }, [userEmail]);
+
+  // Configure AWS S3
+  AWS.config.update({
+    accessKeyId: "YOUR_ACCESS_KEY", // <-- Replace
+    secretAccessKey: "YOUR_SECRET_ACCESS_KEY", // <-- Replace
+    region: "YOUR_BUCKET_REGION", // e.g., "us-east-1"
+  });
+
+  const s3 = new AWS.S3();
+
+  const handleUpload = async () => {
+    if (!userEmail) {
+      alert("You need to login first to upload your resume.");
+      navigate("/Login");
+      return;
+    }
+
+    if (!file) {
+      alert("Please select a resume file first.");
+      return;
+    }
+
+    const params = {
+      Bucket: "YOUR_BUCKET_NAME", // <-- Replace
+      Key: `resumes/${file.name}`, // Save inside a 'resumes' folder in your bucket
+      Body: file,
+      ContentType: file.type,
+      ACL: "private", // or "public-read" if you want public access
+    };
 
     try {
-      const formData = new FormData();
-      formData.append("file_name", file.name);
-      formData.append("file_content", file);
+      setUploading(true);
 
-      const response = await axios.post("http://localhost:5000/upload-file", formData);
+      s3.upload(params, (err, data) => {
+        setUploading(false);
 
-      if (response.status === 200) {
-        alert("Resume uploaded successfully!");
-      } else {
-        alert("Upload failed. Try again.");
-      }
+        if (err) {
+          console.error("Error uploading resume:", err);
+          alert("Something went wrong. Please try again.");
+        } else {
+          console.log("Upload successful:", data.Location);
+          setFile(null);
+          if (fileInputRef.current) {
+            fileInputRef.current.value = "";
+          }
+          alert("Resume uploaded successfully!");
+          navigate("/Data");
+        }
+      });
     } catch (error) {
-      console.error("Error uploading file:", error);
-      alert("Something went wrong!");
-    } finally {
+      console.error("Unexpected error uploading resume:", error);
+      alert("Something went wrong. Please try again.");
       setUploading(false);
-      setFile(null);
-      if (fileInputRef.current) {
-        fileInputRef.current.value = "";
-      }
     }
   };
 
@@ -76,7 +113,7 @@ const Homepage = () => {
             disabled={uploading || !file}
             className="upload-btn"
           >
-            {uploading ? "Analyzing..." : "Upload and Match"}
+            {uploading ? "Uploading..." : "Upload and Match"}
           </button>
         </article>
       </section>

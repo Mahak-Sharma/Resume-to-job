@@ -20,16 +20,46 @@ const Login = () => {
             body: JSON.stringify({ email, password }),
           }
         );
+        const rawResponse = await response.text();
 
-        const result = await response.json();
-
-        if (!response.ok) {
-          throw new Error(result.message || "Invalid credentials");
+        let result;
+        try {
+          const parsedGatewayResponse = JSON.parse(rawResponse); // Parse outer
+          result = JSON.parse(parsedGatewayResponse.body); // Parse inner
+        } catch (e) {
+          console.error("Error parsing JSON:", e);
+          alert("Error parsing server response.");
+          return;
         }
 
-        alert(`Logged in as: ${email}`);
-        navigate("/");
+        if (response.ok) {
+          switch (result.message) {
+            case "Login successful.":
+              alert(`Logged in as: ${email}`);
+              sessionStorage.setItem("userEmail", email);
+              navigate("/");
+              break;
+
+            case "User not found.":
+              alert("User not found. Please Sign Up first.");
+              navigate("/Signup");
+              break;
+
+            case "Incorrect password.":
+              alert("Incorrect password. Please try again.");
+              break;
+
+            default:
+              alert(
+                "Unknown error occurred: " + (result.message || "Unknown error")
+              );
+              break;
+          }
+        } else {
+          alert("Error: " + (result.message || "Something went wrong"));
+        }
       } catch (error) {
+        console.error("Login error:", error);
         alert("Login failed: " + error.message);
       }
     } else {
@@ -44,13 +74,14 @@ const Login = () => {
         <nav className="header-nav">
           <ul className="header-menu">
             <li className="header-menu-item">
-              <Link to="/signup" className="header-link">
+              <Link to="/Signup" className="header-link">
                 SignUp
               </Link>
             </li>
           </ul>
         </nav>
       </header>
+
       <div className="glass-card">
         <h2>Login to Your Account</h2>
         <form onSubmit={handleLogin}>
@@ -71,7 +102,7 @@ const Login = () => {
           <button type="submit">Login</button>
         </form>
         <p className="signup-link">
-          Don't have an account? <Link to="/signup">Sign up</Link>
+          Don't have an account? <Link to="/Signup">Sign up</Link>
         </p>
       </div>
     </div>

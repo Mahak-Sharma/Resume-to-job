@@ -49,7 +49,7 @@ const Signup = () => {
       }
 
       alert(`Signed up as: ${form.name} (${form.email})`);
-      navigate("/login");
+      navigate("/Login");
     } catch (error) {
       alert("Error: " + error.message);
     }
@@ -63,7 +63,7 @@ const Signup = () => {
         <nav className="header-nav">
           <ul className="header-menu">
             <li className="header-menu-item">
-              <Link to="/login" className="header-link">
+              <Link to="/Login" className="header-link">
                 Login
               </Link>
             </li>
@@ -93,9 +93,9 @@ const Signup = () => {
           />
           <input
             type="text"
-            name="collegeYear"
+            name="year"
             placeholder="College Year (e.g., 2nd, 3rd)"
-            value={form.collegeYear}
+            value={form.year}
             onChange={handleChange}
             required
           />
@@ -137,7 +137,7 @@ const Signup = () => {
           <button type="submit">Sign Up</button>
         </form>
         <p className="login-link">
-          Already have an account? <a href="/login">Login</a>
+          Already have an account? <a href="/Login">Login</a>
         </p>
       </div>
     </div>
