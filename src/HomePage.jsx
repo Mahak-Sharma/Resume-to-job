@@ -1,3 +1,4 @@
+import axios from "axios";
 import React, { useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./Homepage.css";
@@ -9,18 +10,33 @@ const Homepage = () => {
   const [action, setAction] = useState("match");
   const navigate = useNavigate();
 
-  const handleUpload = () => {
+  const handleUpload = async () => {
     if (!file || !action) return;
+
     setUploading(true);
 
-    setTimeout(() => {
+    try {
+      const formData = new FormData();
+      formData.append("file_name", file.name);
+      formData.append("file_content", file);
+
+      const response = await axios.post("http://localhost:5000/upload-file", formData);
+
+      if (response.status === 200) {
+        alert("Resume uploaded successfully!");
+      } else {
+        alert("Upload failed. Try again.");
+      }
+    } catch (error) {
+      console.error("Error uploading file:", error);
+      alert("Something went wrong!");
+    } finally {
       setUploading(false);
       setFile(null);
       if (fileInputRef.current) {
         fileInputRef.current.value = "";
       }
-      navigate("/Login");
-    }, 500);
+    }
   };
 
   return (
