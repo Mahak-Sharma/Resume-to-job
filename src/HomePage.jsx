@@ -22,6 +22,17 @@ const Homepage = () => {
     }
   }, [userEmail]);
 
+  const encodeFileToBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        resolve(reader.result.split(",")[1]);
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  };
+
   const handleUpload = async () => {
     if (!userEmail) {
       alert("You need to login first to upload your resume.");
@@ -35,14 +46,22 @@ const Homepage = () => {
 
     try {
       setUploading(true);
-      const formData = new FormData();
-      formData.append("file_name", file.name);
-      formData.append("file_content", file);
+      const fileContent = await encodeFileToBase64(file);
 
-      const response = await axios.post(
-        "http://localhost:5000/upload-file",
-        formData
-      );
+      const uploadData = {
+        fileContent,
+        fileName: file.name,
+        email: userEmail,
+      };
+
+      const apiUrl =
+        "https://daapx8kxod.execute-api.us-east-1.amazonaws.com/PROD/Upload";
+
+      const response = await axios.post(apiUrl, uploadData, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
       if (response.status === 200) {
         alert("Resume uploaded successfully!");

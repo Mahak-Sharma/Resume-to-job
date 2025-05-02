@@ -8,7 +8,7 @@ body, html {
   width: 100%;
   font-family: 'Montserrat', sans-serif;
   background: center/cover no-repeat fixed;
-  background-color: rgba(0, 0, 0, 0.6);
+  background-color: rgba(189, 22, 22, 0.784);
   background-blend-mode: darken;
   overflow-x: hidden;
   scroll-behavior: smooth;
