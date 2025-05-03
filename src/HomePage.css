@@ -71,12 +71,20 @@ body::-webkit-scrollbar {
 .header-menu-item:hover {
   transform: scale(1.1);
 }
+.logout-btn {
+  background: none;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+  text-decoration: underline;
+}
 
 .header-link {
   color: white;
   text-decoration: none;
   font-size: 2rem;
-  margin-right: 10px;;
+  margin-right: 10px;
 }
 
 .header-link:hover {

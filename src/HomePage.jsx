@@ -87,16 +87,40 @@ const Homepage = () => {
         <div className="header-title">Resume-to-job Matcher</div>
         <nav className="header-nav">
           <ul className="header-menu">
-            <li className="header-menu-item">
-              <Link to="/Login" className="header-link">
-                Login
-              </Link>
-            </li>
-            <li className="header-menu-item">
-              <Link to="/SignUp" className="header-link">
-                SignUp
-              </Link>
-            </li>
+            {userEmail ? (
+              <>
+                <li className="header-menu-item">
+                  <Link to="/History" className="header-link">
+                    History
+                  </Link>
+                </li>
+                <li className="header-menu-item">
+                  <button
+                    className="header-link logout-btn"
+                    onClick={() => {
+                      sessionStorage.removeItem("userEmail");
+                      setUserEmail(null);
+                      navigate("/");
+                    }}
+                  >
+                    Logout
+                  </button>
+                </li>
+              </>
+            ) : (
+              <>
+                <li className="header-menu-item">
+                  <Link to="/Login" className="header-link">
+                    Login
+                  </Link>
+                </li>
+                <li className="header-menu-item">
+                  <Link to="/SignUp" className="header-link">
+                    SignUp
+                  </Link>
+                </li>
+              </>
+            )}
           </ul>
         </nav>
       </header>
