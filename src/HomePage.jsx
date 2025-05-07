@@ -8,7 +8,8 @@ const Homepage = () => {
   const [file, setFile] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [userEmail, setUserEmail] = useState(null);
-  const [action, setAction] = useState("match");
+  const [resumeUrl, setResumeUrl] = useState(null);
+  const [showHistory, setShowHistory] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -21,17 +22,13 @@ const Homepage = () => {
       sessionStorage.setItem("userEmail", userEmail);
     }
   }, [userEmail]);
-
-  const encodeFileToBase64 = (file) => {
-    return new Promise((resolve, reject) => {
+  const encodeFileToBase64 = (file) =>
+    new Promise((resolve, reject) => {
       const reader = new FileReader();
-      reader.onloadend = () => {
-        resolve(reader.result.split(",")[1]);
-      };
+      reader.onloadend = () => resolve(reader.result.split(",")[1]);
       reader.onerror = reject;
       reader.readAsDataURL(file);
     });
-  };
 
   const handleUpload = async () => {
     if (!userEmail) {
@@ -40,9 +37,7 @@ const Homepage = () => {
       return;
     }
 
-    if (!file || !action) {
-      return;
-    }
+    if (!file) return;
 
     try {
       setUploading(true);
@@ -54,18 +49,15 @@ const Homepage = () => {
         email: userEmail,
       };
 
-      const apiUrl =
-        "https://daapx8kxod.execute-api.us-east-1.amazonaws.com/PROD/Upload";
-
-      const response = await axios.post(apiUrl, uploadData, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await axios.post(
+        "https://daapx8kxod.execute-api.us-east-1.amazonaws.com/PROD/Upload",
+        uploadData,
+        { headers: { "Content-Type": "application/json" } }
+      );
 
       if (response.status === 200) {
         alert("Resume uploaded successfully!");
-        navigate("/Data");
+        navigate("/Resume-data/Data");
       } else {
         alert("Upload failed. Try again.");
       }
@@ -90,9 +82,12 @@ const Homepage = () => {
             {userEmail ? (
               <>
                 <li className="header-menu-item">
-                  <Link to="/History" className="header-link">
+                  <button
+                    className="header-link"
+                    onClick={() => setShowHistory(true)}
+                  >
                     History
-                  </Link>
+                  </button>
                 </li>
                 <li className="header-menu-item">
                   <button
@@ -100,6 +95,8 @@ const Homepage = () => {
                     onClick={() => {
                       sessionStorage.removeItem("userEmail");
                       setUserEmail(null);
+                      setResumeUrl(null);
+                      setShowHistory(false);
                       navigate("/");
                     }}
                   >
@@ -153,22 +150,17 @@ const Homepage = () => {
           <div className="service-card">
             <h3>Skill Extraction</h3>
             <p>
-              Automatically extract technical and soft skills from your resume
-              using AI and NLP.
+              Automatically extract skills from your resume using AI and NLP.
             </p>
           </div>
           <div className="service-card">
             <h3>Live Job Matching</h3>
-            <p>
-              Instantly match your profile with real-time job listings from
-              multiple platforms.
-            </p>
+            <p>Match your resume with real-time job listings.</p>
           </div>
           <div className="service-card">
             <h3>Smart Recommendations</h3>
             <p>
-              Receive personalized job suggestions based on your resume content
-              and experience.
+              Get job suggestions based on your resume content and experience.
             </p>
           </div>
         </div>
@@ -177,11 +169,33 @@ const Homepage = () => {
       <section className="about-us">
         <h2>About Us</h2>
         <p>
-          Our AI-powered platform helps job seekers find tailored job
-          opportunities by intelligently analyzing resumes and comparing them
-          with real-time job listings via public APIs.
+          Our AI-powered platform analyzes resumes and finds tailored job
+          matches using real-time data.
         </p>
       </section>
+
+      {showHistory && (
+        <div className="history-panel">
+          <div className="history-header">
+            <h3>History</h3>
+            <button onClick={() => setShowHistory(false)} className="close-btn">
+              ×
+            </button>
+          </div>
+          <div className="history-content">
+            <p>
+              <strong>Email:</strong> {userEmail}
+            </p>
+            <p>
+              <strong>Jobs Applied For:</strong>
+            </p>
+            <ul>
+              <li>Frontend Developer at XYZ Corp</li>
+              <li>Software Engineer at ABC Inc</li>
+            </ul>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

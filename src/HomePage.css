@@ -81,10 +81,12 @@ body::-webkit-scrollbar {
 }
 
 .header-link {
-  color: white;
-  text-decoration: none;
-  font-size: 2rem;
-  margin-right: 10px;
+  background: none;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+  text-decoration: underline;
 }
 
 .header-link:hover {
@@ -223,9 +225,39 @@ body::-webkit-scrollbar {
 
 select.file-upload-section {
   background-color: rgba(0, 0, 0, 0.2);
-  color: white;
   border: none;
   font-size: 1rem;
+}
+.history-panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 33.33%;
+  height: 100%;
+  background-color:rgba(0, 0, 0);
+  box-shadow: -2px 0 8px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  padding: 20px;
+  color: white;
+  overflow-y: auto;
+}
+
+.history-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.close-btn {
+  font-size: 20px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #ffffff;
+}
+
+.history-content {
+  margin-top: 20px;
 }
 
 @media (max-width: 768px) {
