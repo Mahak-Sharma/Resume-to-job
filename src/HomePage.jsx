@@ -14,14 +14,17 @@ const Homepage = () => {
 
   useEffect(() => {
     const email = sessionStorage.getItem("userEmail");
-    setUserEmail(email);
+    if (email) {
+      setUserEmail(email); // just set it
+    }
   }, []);
 
   useEffect(() => {
     if (userEmail) {
-      sessionStorage.setItem("userEmail", userEmail);
+      fetchResume(userEmail); // wait until state is updated
     }
-  }, [userEmail]);
+  }, [userEmail]); // 👈 new effect watches for userEmail changes
+
   const encodeFileToBase64 = (file) =>
     new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -29,6 +32,26 @@ const Homepage = () => {
       reader.onerror = reject;
       reader.readAsDataURL(file);
     });
+  const fetchResume = async (email) => {
+    try {
+      console.log("Calling fetchResume: ", email);
+      const res = await axios.get(
+        "https://daapx8kxod.execute-api.us-east-1.amazonaws.com/PROD/GetResume",
+        { params: { email } }
+      );
+      console.log("Resume fetch response:", res.data);
+      if (res.data?.fileUrl) {
+        setResumeUrl(res.data.fileUrl);
+      } else {
+        console.warn("No resume URL returned for this user.");
+      }
+    } catch (err) {
+      console.error(
+        "Error fetching resume:",
+        err?.response?.data || err.message
+      );
+    }
+  };
 
   const handleUpload = async () => {
     if (!userEmail) {
@@ -186,6 +209,17 @@ const Homepage = () => {
             <p>
               <strong>Email:</strong> {userEmail}
             </p>
+            <p>
+              <strong>Resume Uploaded:</strong>
+            </p>
+            {resumeUrl ? (
+              <a href={resumeUrl} target="_blank" rel="noopener noreferrer">
+                View Resume
+              </a>
+            ) : (
+              <p>No resume found.</p>
+            )}
+
             <p>
               <strong>Jobs Applied For:</strong>
             </p>
