@@ -259,6 +259,50 @@ select.file-upload-section {
 .history-content {
   margin-top: 20px;
 }
+/* Styling for the Select Skills Dropdown */
+.skills-dropdown {
+  width: 100%;
+  max-width: 300px;
+  padding: 10px;
+  font-size: 16px;
+  border: 2px solid #007bff;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  color: #333;
+  outline: none;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  appearance: none; /* Remove default browser styles */
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 5'%3E%3Cpath fill='%23007bff' d='M2 0L0 2h4z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 10px;
+}
+
+/* Hover and Focus Effects */
+.skills-dropdown:hover,
+.skills-dropdown:focus {
+  border-color: #0056b3;
+  background-color: #e6f0ff;
+}
+
+/* Disabled Placeholder Option Styling */
+.skills-dropdown option[value=""] {
+  color: #999;
+}
+
+/* Wrapper for Dropdown Section */
+.select-section {
+  text-align: center;
+  margin: 20px 0;
+}
+
+.select-section h2 {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+  color: #333;
+  font-weight: bold;
+}
 
 @media (max-width: 768px) {
   .service-cards {

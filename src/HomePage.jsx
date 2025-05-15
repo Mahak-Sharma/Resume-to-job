@@ -10,20 +10,21 @@ const Homepage = () => {
   const [userEmail, setUserEmail] = useState(null);
   const [resumeUrl, setResumeUrl] = useState(null);
   const [showHistory, setShowHistory] = useState(false);
+  const [selectedSkills, setSelectedSkills] = useState([]); // State to store selected skills
   const navigate = useNavigate();
 
   useEffect(() => {
     const email = sessionStorage.getItem("userEmail");
     if (email) {
-      setUserEmail(email); // just set it
+      setUserEmail(email);
     }
   }, []);
 
   useEffect(() => {
     if (userEmail) {
-      fetchResume(userEmail); // wait until state is updated
+      fetchResume(userEmail);
     }
-  }, [userEmail]); // 👈 new effect watches for userEmail changes
+  }, [userEmail]);
 
   const encodeFileToBase64 = (file) =>
     new Promise((resolve, reject) => {
@@ -32,24 +33,38 @@ const Homepage = () => {
       reader.onerror = reject;
       reader.readAsDataURL(file);
     });
+
   const fetchResume = async (email) => {
     try {
-      console.log("Calling fetchResume: ", email);
-      const res = await axios.get(
-        "https://daapx8kxod.execute-api.us-east-1.amazonaws.com/PROD/GetResume",
-        { params: { email } }
+      const response = await fetch(
+        `https://daapx8kxod.execute-api.us-east-1.amazonaws.com/PROD/GetResume`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email }),
+        }
       );
-      console.log("Resume fetch response:", res.data);
-      if (res.data?.fileUrl) {
-        setResumeUrl(res.data.fileUrl);
-      } else {
-        console.warn("No resume URL returned for this user.");
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
-    } catch (err) {
-      console.error(
-        "Error fetching resume:",
-        err?.response?.data || err.message
-      );
+
+      const data = await response.json();
+      if (data.body) {
+        const bodyData = JSON.parse(data.body);
+        if (bodyData.fileUrl) {
+          setResumeUrl(bodyData.fileUrl);
+        } else {
+          setResumeUrl(null);
+        }
+      } else {
+        setResumeUrl(null);
+      }
+    } catch (error) {
+      console.error("Error fetching resume:", error);
+      setResumeUrl(null);
     }
   };
 
@@ -92,6 +107,23 @@ const Homepage = () => {
       setFile(null);
       if (fileInputRef.current) {
         fileInputRef.current.value = "";
+      }
+    }
+  };
+
+  const handleSkillSelect = async (e) => {
+    const selectedSkill = e.target.value;
+    if (selectedSkill) {
+      setSelectedSkills((prevSkills) => [...prevSkills, selectedSkill]);
+
+      try {
+        // Send the selected skill to the backend
+        await axios.post("http://localhost:5000/api/add-skill", {
+          skill: selectedSkill,
+        });
+        console.log(`Skill "${selectedSkill}" stored successfully.`);
+      } catch (error) {
+        console.error("Error storing skill:", error);
       }
     }
   };
@@ -165,6 +197,33 @@ const Homepage = () => {
             {uploading ? "Uploading..." : "Upload and Match"}
           </button>
         </article>
+        <article>
+          <h2>Select your skills</h2>
+          <select className="skills-dropdown" onChange={handleSkillSelect}>
+            <option value="">-- Select a Skill --</option>
+            <option value="frontend">Frontend Development</option>
+            <option value="backend">Backend Development</option>
+            <option value="data-science">Data Science</option>
+            <option value="ui-ux">UI/UX Design</option>
+            <option value="devops">DevOps</option>
+          </select>
+          <button
+            onClick={handleUpload}
+            disabled={uploading}
+            className="upload-btn"
+          >
+            {uploading ? "Uploading..." : "Upload and Match"}
+          </button>
+        </article>
+      </section>
+
+      <section className="selected-skills">
+        <h2>Selected Skills</h2>
+        <ul>
+          {selectedSkills.map((skill, index) => (
+            <li key={index}>{skill}</li>
+          ))}
+        </ul>
       </section>
 
       <section className="services">
@@ -188,48 +247,6 @@ const Homepage = () => {
           </div>
         </div>
       </section>
-
-      <section className="about-us">
-        <h2>About Us</h2>
-        <p>
-          Our AI-powered platform analyzes resumes and finds tailored job
-          matches using real-time data.
-        </p>
-      </section>
-
-      {showHistory && (
-        <div className="history-panel">
-          <div className="history-header">
-            <h3>History</h3>
-            <button onClick={() => setShowHistory(false)} className="close-btn">
-              ×
-            </button>
-          </div>
-          <div className="history-content">
-            <p>
-              <strong>Email:</strong> {userEmail}
-            </p>
-            <p>
-              <strong>Resume Uploaded:</strong>
-            </p>
-            {resumeUrl ? (
-              <a href={resumeUrl} target="_blank" rel="noopener noreferrer">
-                View Resume
-              </a>
-            ) : (
-              <p>No resume found.</p>
-            )}
-
-            <p>
-              <strong>Jobs Applied For:</strong>
-            </p>
-            <ul>
-              <li>Frontend Developer at XYZ Corp</li>
-              <li>Software Engineer at ABC Inc</li>
-            </ul>
-          </div>
-        </div>
-      )}
     </div>
   );
 };
