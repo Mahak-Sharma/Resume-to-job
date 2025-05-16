@@ -3,6 +3,35 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./Homepage.css";
 
+const skillOptions = {
+  frontend: ["HTML", "CSS", "JavaScript", "React", "Vue", "Angular"],
+  backend: [
+    "Node.js",
+    "Express",
+    "Django",
+    "Flask",
+    "Ruby on Rails",
+    "Spring Boot",
+  ],
+  "data-science": [
+    "Python",
+    "R",
+    "Pandas",
+    "TensorFlow",
+    "PyTorch",
+    "Scikit-learn",
+  ],
+  "ui-ux": [
+    "Figma",
+    "Sketch",
+    "Adobe XD",
+    "InVision",
+    "Wireframing",
+    "Prototyping",
+  ],
+  devops: ["Docker", "Kubernetes", "AWS", "Azure", "CI/CD", "Terraform"],
+};
+
 const Homepage = () => {
   const fileInputRef = useRef(null);
   const [file, setFile] = useState(null);
@@ -10,20 +39,18 @@ const Homepage = () => {
   const [userEmail, setUserEmail] = useState(null);
   const [resumeUrl, setResumeUrl] = useState(null);
   const [showHistory, setShowHistory] = useState(false);
-  const [selectedSkills, setSelectedSkills] = useState([]); // State to store selected skills
+
+  const [mainSkill, setMainSkill] = useState("");
+  const [selectedSubSkills, setSelectedSubSkills] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
     const email = sessionStorage.getItem("userEmail");
-    if (email) {
-      setUserEmail(email);
-    }
+    if (email) setUserEmail(email);
   }, []);
 
   useEffect(() => {
-    if (userEmail) {
-      fetchResume(userEmail);
-    }
+    if (userEmail) fetchResume(userEmail);
   }, [userEmail]);
 
   const encodeFileToBase64 = (file) =>
@@ -40,28 +67,14 @@ const Homepage = () => {
         `https://daapx8kxod.execute-api.us-east-1.amazonaws.com/PROD/GetResume`,
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email }),
         }
       );
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
       const data = await response.json();
-      if (data.body) {
-        const bodyData = JSON.parse(data.body);
-        if (bodyData.fileUrl) {
-          setResumeUrl(bodyData.fileUrl);
-        } else {
-          setResumeUrl(null);
-        }
-      } else {
-        setResumeUrl(null);
-      }
+      const bodyData = JSON.parse(data.body);
+      setResumeUrl(bodyData?.fileUrl || null);
     } catch (error) {
       console.error("Error fetching resume:", error);
       setResumeUrl(null);
@@ -80,12 +93,7 @@ const Homepage = () => {
     try {
       setUploading(true);
       const fileContent = await encodeFileToBase64(file);
-
-      const uploadData = {
-        fileContent,
-        fileName: file.name,
-        email: userEmail,
-      };
+      const uploadData = { fileContent, fileName: file.name, email: userEmail };
 
       const response = await axios.post(
         "https://daapx8kxod.execute-api.us-east-1.amazonaws.com/PROD/Upload",
@@ -105,26 +113,29 @@ const Homepage = () => {
     } finally {
       setUploading(false);
       setFile(null);
-      if (fileInputRef.current) {
-        fileInputRef.current.value = "";
-      }
+      if (fileInputRef.current) fileInputRef.current.value = "";
     }
   };
 
-  const handleSkillSelect = async (e) => {
-    const selectedSkill = e.target.value;
-    if (selectedSkill) {
-      setSelectedSkills((prevSkills) => [...prevSkills, selectedSkill]);
+  const handleMainSkillChange = (e) => {
+    setMainSkill(e.target.value);
+    setSelectedSubSkills([]);
+  };
 
-      try {
-        // Send the selected skill to the backend
-        await axios.post("http://localhost:5000/api/add-skill", {
-          skill: selectedSkill,
-        });
-        console.log(`Skill "${selectedSkill}" stored successfully.`);
-      } catch (error) {
-        console.error("Error storing skill:", error);
-      }
+  const handleSubSkillToggle = async (skill) => {
+    const updatedSkills = selectedSubSkills.includes(skill)
+      ? selectedSubSkills.filter((s) => s !== skill)
+      : [...selectedSubSkills, skill];
+
+    setSelectedSubSkills(updatedSkills);
+
+    try {
+      await axios.post("http://localhost:5000/api/add-skill", {
+        skill,
+      });
+      console.log(`Skill "${skill}" stored successfully.`);
+    } catch (error) {
+      console.error("Error storing skill:", error);
     }
   };
 
@@ -197,30 +208,45 @@ const Homepage = () => {
             {uploading ? "Uploading..." : "Upload and Match"}
           </button>
         </article>
-        <article>
-          <h2>Select your skills</h2>
-          <select className="skills-dropdown" onChange={handleSkillSelect}>
-            <option value="">-- Select a Skill --</option>
-            <option value="frontend">Frontend Development</option>
-            <option value="backend">Backend Development</option>
-            <option value="data-science">Data Science</option>
-            <option value="ui-ux">UI/UX Design</option>
-            <option value="devops">DevOps</option>
-          </select>
-          <button
-            onClick={handleUpload}
-            disabled={uploading}
-            className="upload-btn"
-          >
-            {uploading ? "Uploading..." : "Upload and Match"}
-          </button>
-        </article>
+      </section>
+
+      <section className="select-skills">
+        <h2>Select Main Skill</h2>
+        <select
+          className="skills-dropdown"
+          value={mainSkill}
+          onChange={handleMainSkillChange}
+        >
+          <option value="">-- Select a Skill Category --</option>
+          {Object.keys(skillOptions).map((key) => (
+            <option key={key} value={key}>
+              {key.replace("-", " ").toUpperCase()}
+            </option>
+          ))}
+        </select>
+
+        {mainSkill && (
+          <div className="sub-skills-checkboxes">
+            <h3>Select Sub-skills</h3>
+            {skillOptions[mainSkill].map((subSkill) => (
+              <label key={subSkill} className="checkbox-label">
+                <input
+                  type="checkbox"
+                  value={subSkill}
+                  checked={selectedSubSkills.includes(subSkill)}
+                  onChange={() => handleSubSkillToggle(subSkill)}
+                />
+                {subSkill}
+              </label>
+            ))}
+          </div>
+        )}
       </section>
 
       <section className="selected-skills">
-        <h2>Selected Skills</h2>
+        <h2>Selected Sub-Skills</h2>
         <ul>
-          {selectedSkills.map((skill, index) => (
+          {selectedSubSkills.map((skill, index) => (
             <li key={index}>{skill}</li>
           ))}
         </ul>

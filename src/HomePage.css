@@ -259,50 +259,130 @@ select.file-upload-section {
 .history-content {
   margin-top: 20px;
 }
-/* Styling for the Select Skills Dropdown */
-.skills-dropdown {
-  width: 100%;
-  max-width: 300px;
-  padding: 10px;
-  font-size: 16px;
-  border: 2px solid #007bff;
-  border-radius: 8px;
-  background-color: #f9f9f9;
-  color: #333;
-  outline: none;
-  transition: all 0.3s ease;
-  cursor: pointer;
-  appearance: none; /* Remove default browser styles */
-  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 5'%3E%3Cpath fill='%23007bff' d='M2 0L0 2h4z'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 10px center;
-  background-size: 10px;
-}
-
-/* Hover and Focus Effects */
-.skills-dropdown:hover,
-.skills-dropdown:focus {
-  border-color: #0056b3;
-  background-color: #e6f0ff;
-}
-
-/* Disabled Placeholder Option Styling */
-.skills-dropdown option[value=""] {
-  color: #999;
-}
-
-/* Wrapper for Dropdown Section */
-.select-section {
+/* --- Skill Selection Section (Checkbox-Based Dropdown) --- */
+.select-skills {
+  margin: 32px auto;
+  width: 90%;
+  background-color: rgba(255, 255, 255, 0.395);
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  padding: 2rem;
   text-align: center;
-  margin: 20px 0;
 }
 
-.select-section h2 {
+.select-skills h2 {
   font-size: 1.5rem;
-  margin-bottom: 10px;
-  color: #333;
-  font-weight: bold;
+  color: #000000;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  letter-spacing: 0.5px;
 }
+
+/* Dropdown-like Container */
+.skills-dropdown-checkboxes {
+  background: #f4f8fb;
+  border: 2px solid  rgba(189, 22, 22, 0.784);;
+  border-radius: 12px;
+  padding: 1rem;
+  text-align: left;
+  max-height: 200px;
+  overflow-y: auto;
+  box-shadow: 0 2px 8px rgba(25, 118, 210, 0.08);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.skills-dropdown-checkboxes:hover,
+.skills-dropdown-checkboxes:focus-within {
+  border-color:  rgba(189, 22, 22, 0.784);
+  background: #e3f2fd;
+}
+
+/* Checkbox Items */
+.skill-checkbox {
+  display: flex;
+  align-items: center;
+  margin: 8px 0;
+}
+
+.skill-checkbox input[type="checkbox"] {
+  accent-color:  rgba(189, 22, 22, 0.784);;
+  margin-right: 10px;
+  transform: scale(1.2);
+  cursor: pointer;
+}
+
+.skill-checkbox label {
+  font-size: 1rem;
+  color: #333;
+  cursor: pointer;
+}
+
+/* --- Selected Skills Display --- */
+.selected-skills {
+  margin-top: 24px;
+  background: rgba(255, 255, 255, 0.92);
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(25, 118, 210, 0.07);
+  padding: 1.5rem 2rem;
+  text-align: center;
+}
+
+.selected-skills h2 {
+  font-size: 1.2rem;
+  color: #1976d2;
+  margin-bottom: 0.7rem;
+  font-weight: 600;
+}
+
+.selected-skills ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.selected-skills li {
+  display: inline-block;
+  background: #e3f2fd;
+  color: #1976d2;
+  border-radius: 16px;
+  padding: 6px 16px;
+  margin: 4px 6px;
+  font-size: 0.98rem;
+  font-weight: 500;
+  letter-spacing: 0.2px;
+  box-shadow: 0 1px 4px rgba(25, 118, 210, 0.08);
+}
+
+/* Scrollbar Styling for Dropdown Box */
+.skills-dropdown-checkboxes::-webkit-scrollbar {
+  width: 6px;
+}
+.skills-dropdown-checkboxes::-webkit-scrollbar-thumb {
+  background-color: rgba(25, 118, 210, 0.4);
+  border-radius: 4px;
+}
+.skills-dropdown-checkboxes::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+/* Responsive Styling */
+@media (max-width: 600px) {
+  .select-skills,
+  .selected-skills {
+    max-width: 95vw;
+    padding: 1rem;
+  }
+
+  .skills-dropdown-checkboxes {
+    font-size: 0.95rem;
+  }
+
+  .skill-checkbox label {
+    font-size: 0.95rem;
+  }
+}
+
 
 @media (max-width: 768px) {
   .service-cards {
