@@ -1,93 +1,93 @@
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-body, html {
-  height: 100%;
-  width: 100%;
-  font-family: 'Montserrat', sans-serif;
-  background: center/cover no-repeat fixed;
-  background-color:rgba(189, 22, 22, 0.784);
-  background-blend-mode: darken;
-  overflow-x: hidden;
-  scroll-behavior: smooth;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-}
-
-body::-webkit-scrollbar {
-  display: none;
-}
-
-.data-container {
-    backdrop-filter: blur(5px);
-    background-color: rgba(255, 255, 255, 0.1);
-    min-height: 100vh;
-    width: 100vw;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding-top: 80px;
-    overflow-x: hidden;
-    position: relative;
-}
-
-.data-header {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  background-color: rgba(0, 0, 0, 0.441);
-  color: white;
-  padding: 15px 15px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-family: "Cambria", Cochin, Georgia, Times, "Times New Roman", serif;
-  font-size: 30px;
-  font-weight: 900;
-  z-index: 5;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
   }
-.header-title {
-  font-family: "Courier New", Courier, monospace;
-  padding-left: 10px;
-}
-.job-matches-container {
-padding: 20px;
-max-width: 1200px;
-margin: auto;
+  body, html {
+    height: 100%;
+    width: 100%;
+    font-family: 'Montserrat', sans-serif;
+    background: center/cover no-repeat fixed;
+    background-color:rgba(189, 22, 22, 0.784);
+    background-blend-mode: darken;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  
+  body::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .data-container {
+      backdrop-filter: blur(5px);
+      background-color: rgba(255, 255, 255, 0.1);
+      min-height: 100vh;
+      width: 100vw;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 80px;
+      overflow-x: hidden;
+      position: relative;
+  }
+  
+  .data-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.441);
+    color: white;
+    padding: 15px 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: "Cambria", Cochin, Georgia, Times, "Times New Roman", serif;
+    font-size: 30px;
+    font-weight: 900;
+    z-index: 5;
+    }
+  .header-title {
+    font-family: "Courier New", Courier, monospace;
+    padding-left: 10px;
+  }
+  .job-matches-container {
+  padding: 20px;
+  max-width: 1200px;
+  margin: auto;
 }
 
 .job-list {
-display: flex;
-flex-wrap: wrap;
-gap: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
 }
 
 .job-card {
-background: #f4f4f4;
-padding: 15px;
-border-radius: 8px;
-width: calc(33.33% - 20px);
-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  background: #f4f4f4;
+  padding: 15px;
+  border-radius: 8px;
+  width: calc(33.33% - 20px);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .job-card h3 {
-margin-top: 0;
+  margin-top: 0;
 }
 
 .pagination {
-margin-top: 20px;
-display: flex;
-justify-content: center;
-gap: 10px;
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
 }
 .pagination button {
-background: #007bff;
-color: white;
-border: none;
-padding: 10px 15px;
-border-radius: 5px;
-cursor: pointer;
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
 }

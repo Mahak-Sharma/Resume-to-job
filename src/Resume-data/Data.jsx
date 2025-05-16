@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "./Data.css"; // Or whatever your CSS file is
+import "./Data.css";
 import adzuna_jobs_clean from "./adzuna_jobs_clean.json";
 const ITEMS_PER_PAGE = 30;
 
@@ -17,11 +17,6 @@ const Data = () => {
       return;
     }
     setJobs(adzuna_jobs_clean);
-
-
-
-
-
   }, [userEmail, navigate]);
 
   const totalPages = Math.ceil(jobs.length / ITEMS_PER_PAGE);
