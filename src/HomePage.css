@@ -28,7 +28,7 @@ body::-webkit-scrollbar {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-top: 80px;
+  padding-top: 60px;
   overflow-x: hidden;
   position: relative;
 }
@@ -38,7 +38,7 @@ body::-webkit-scrollbar {
   top: 0;
   left: 0;
   width: 100%;
-  height: 80px;
+  height: 60px;
   background-color: rgba(0, 0, 0, 0.6);
   color: white;
   padding: 0 15px;
@@ -168,37 +168,40 @@ body::-webkit-scrollbar {
 }
 
 .placeorder-overlay {
-  padding: 2rem;
+  padding: 0.5rem 2rem;
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-bottom: 2rem;
   width: 100%;
+  margin-bottom: 1rem;
 }
-.placeorder-overlay h2{
-  color:rgb(0, 0, 0);
+
+.placeorder-overlay h2 {
+  color: rgb(0, 0, 0);
   font-weight: 600;
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
 }
+
 .placeorder-overlay article {
   background-color: rgba(255, 255, 255, 0.395);
   color: #000;
-  padding: 2rem;
+  padding: 1rem 2rem;
   border-radius: 1rem;
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
   text-align: center;
   color: white;
+  width: 100%;
+  margin: 0 auto;
 }
 
-.placeorder-overlay input{
-  color: black;
-}
 .file-upload-section {
   display: block;
   margin: 1rem auto;
   color: white;
   background-color: transparent;
   border: 2px dashed rgba(255, 255, 255, 0.4);
-  padding: 0.8rem;
+  padding: 1rem;
   border-radius: 10px;
   cursor: pointer;
   width: 100%;
@@ -215,143 +218,262 @@ body::-webkit-scrollbar {
   font-weight: bold;
   cursor: pointer;
   transition: background 0.3s ease;
-  margin-top: 1rem;
   width: 100%;
+  margin-top: 0.5rem;
 }
 
-.upload-btn:hover {
+.upload-btn:hover:not(:disabled) {
   background: rgba(255, 255, 255, 0.2);
 }
 
-select.file-upload-section {
-  background-color: rgba(0, 0, 0, 0.2);
-  border: none;
-  font-size: 1rem;
-}
-.history-panel {
-  position: fixed;
-  top: 0;
-  right: 0;
-  width: 33.33%;
-  height: 100%;
-  background-color:rgba(0, 0, 0);
-  box-shadow: -2px 0 8px rgba(0, 0, 0, 0.2);
-  z-index: 1000;
-  padding: 20px;
-  color: white;
-  overflow-y: auto;
+.upload-btn:disabled {
+  background-color: rgba(255, 255, 255, 0.3);
+  cursor: not-allowed;
 }
 
-.history-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.error-message {
+  background-color: rgba(220, 38, 38, 0.1);
+  color: #ef4444;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
 }
 
-.close-btn {
-  font-size: 20px;
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: #ffffff;
-}
-
-.history-content {
-  margin-top: 20px;
-}
 /* --- Skill Selection Section (Checkbox-Based Dropdown) --- */
 .select-skills {
-  margin: 32px auto;
-  width: 90%;
-  background-color: rgba(255, 255, 255, 0.395);
-  border-radius: 16px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-  padding: 2rem;
-  text-align: center;
+  padding: 1rem 2rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
 }
 
 .select-skills h2 {
+  color: rgb(0, 0, 0);
+  font-weight: 600;
+  margin-bottom: 0.5rem;
   font-size: 1.5rem;
-  color: #000000;
-  font-weight: 700;
-  margin-bottom: 1rem;
-  letter-spacing: 0.5px;
 }
 
-/* Dropdown-like Container */
-.skills-dropdown-checkboxes {
-  background: #f4f8fb;
-  border: 2px solid  rgba(189, 22, 22, 0.784);;
-  border-radius: 12px;
+.select-skills article {
+  background-color: rgba(255, 255, 255, 0.395);
+  padding: 1rem 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  width: 100%;
+  margin: 0 auto;
+  overflow: auto;
+}
+
+.skills-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0.5rem;
+}
+
+.all-skills-sections {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  padding-bottom: 0.5rem;
+}
+
+.all-skills-sections::-webkit-scrollbar {
+  display: none;
+}
+
+.skill-section {
+  background-color: rgba(255, 255, 255, 0.6);
   padding: 1rem;
-  text-align: left;
-  max-height: 200px;
-  overflow-y: auto;
-  box-shadow: 0 2px 8px rgba(25, 118, 210, 0.08);
+  border-radius: 10px;
+  width: 100%;
+  min-width: 250px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.skill-section:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+.skill-category-title {
+  color: #000;
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+}
+
+.skill-category-description {
+  color: rgba(0, 0, 0, 0.7);
+  font-size: 0.8rem;
+  margin-bottom: 0.5rem;
+}
+
+.sub-categories {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.sub-category {
+  background-color: rgba(255, 255, 255, 0.4);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.sub-category-header {
+  width: 100%;
+  padding: 0.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: rgba(189, 22, 22, 0.784);
+  color: white;
+  border: none;
   cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
   transition: all 0.3s ease;
 }
 
-.skills-dropdown-checkboxes:hover,
-.skills-dropdown-checkboxes:focus-within {
-  border-color:  rgba(189, 22, 22, 0.784);
-  background: #e3f2fd;
+.sub-category-header:hover {
+  background-color: rgba(189, 22, 22, 0.9);
 }
 
-/* Checkbox Items */
+.sub-category-header .dropdown-arrow {
+  transition: transform 0.3s ease;
+}
+
+.sub-category-header.expanded .dropdown-arrow {
+  transform: rotate(180deg);
+}
+
+.sub-skills-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 0.5rem;
+  padding: 0.5rem;
+  background-color: rgba(255, 255, 255, 0.6);
+}
+
 .skill-checkbox {
   display: flex;
   align-items: center;
-  margin: 8px 0;
+  gap: 0.25rem;
+  padding: 0.25rem;
+  background-color: rgba(255, 255, 255, 0.4);
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.skill-checkbox:hover {
+  background-color: rgba(255, 255, 255, 0.6);
+  transform: translateX(4px);
 }
 
 .skill-checkbox input[type="checkbox"] {
-  accent-color:  rgba(189, 22, 22, 0.784);;
-  margin-right: 10px;
-  transform: scale(1.2);
+  width: 16px;
+  height: 16px;
   cursor: pointer;
+  accent-color: rgba(189, 22, 22, 0.784);
 }
 
 .skill-checkbox label {
-  font-size: 1rem;
-  color: #333;
+  color: #000;
+  font-size: 0.9rem;
   cursor: pointer;
+  user-select: none;
 }
 
-/* --- Selected Skills Display --- */
 .selected-skills {
-  margin-top: 24px;
-  background: rgba(255, 255, 255, 0.92);
+  margin-top: 1rem;
+  background-color: rgba(255, 255, 255, 0.6);
   border-radius: 10px;
-  box-shadow: 0 2px 10px rgba(25, 118, 210, 0.07);
-  padding: 1.5rem 2rem;
-  text-align: center;
+  width: 100%;
+  padding: 0.75rem;
 }
 
-.selected-skills h2 {
+.selected-skills h3 {
+  color: #000;
+  margin-bottom: 0.5rem;
+  text-align: left;
+  padding-left: 0.5rem;
+  font-size: 1rem;
+}
+
+.selected-skills-list-container {
+  width: 100%;
+  overflow-x: auto;
+  padding: 0.5rem;
+  margin-bottom: 0.5rem;
+  border-radius: 8px;
+  background-color: rgba(255, 255, 255, 0.3);
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.selected-skills-list-container::-webkit-scrollbar {
+  display: none;
+}
+
+.selected-skills-list {
+  display: inline-flex;
+  gap: 0.8rem;
+  padding: 0.25rem;
+  min-width: min-content;
+  align-items: center;
+}
+
+.selected-skill-tag {
+  background-color: rgba(189, 22, 22, 0.784);
+  color: white;
+  padding: 0.6rem 1rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+  white-space: nowrap;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  user-select: none;
+}
+
+.selected-skill-tag:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.remove-skill {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
   font-size: 1.2rem;
-  color: #1976d2;
-  margin-bottom: 0.7rem;
-  font-weight: 600;
-}
-
-.selected-skills ul {
-  list-style: none;
   padding: 0;
-  margin: 0;
+  display: flex;
+  align-items: center;
+  opacity: 0.8;
+  transition: all 0.2s ease;
+  margin-left: 0.25rem;
 }
 
-.selected-skills li {
-  display: inline-block;
-  background: #e3f2fd;
-  color: #1976d2;
-  border-radius: 16px;
-  padding: 6px 16px;
-  margin: 4px 6px;
-  font-size: 0.98rem;
-  font-weight: 500;
-  letter-spacing: 0.2px;
-  box-shadow: 0 1px 4px rgba(25, 118, 210, 0.08);
+.remove-skill:hover {
+  opacity: 1;
+  transform: scale(1.1);
 }
 
 /* Scrollbar Styling for Dropdown Box */
@@ -364,6 +486,51 @@ select.file-upload-section {
 }
 .skills-dropdown-checkboxes::-webkit-scrollbar-track {
   background-color: transparent;
+}
+.other-skills-container {
+  margin-top: 1rem;
+  padding: 0.75rem;
+  background-color: rgba(255, 255, 255, 0.6);
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.other-skills-container:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+.other-skills-form {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+.add-skill-btn {
+  padding: 0.5rem 1rem;
+  background-color: rgba(189, 22, 22, 0.784);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  min-width: 100px;
+}
+.other-skills-input {
+  flex: 1;
+  padding: 0.5rem 0.75rem;
+  border: 2px solid rgba(189, 22, 22, 0.2);
+  border-radius: 8px;
+  background-color: rgba(255, 255, 255, 0.8);
+  font-size: 0.9rem;
+}
+
+.other-skills-input:focus {
+  outline: none;
+  border-color: rgba(189, 22, 22, 0.784);
+  box-shadow: 0 0 0 2px rgba(189, 22, 22, 0.2);
 }
 
 /* Responsive Styling */
@@ -382,7 +549,6 @@ select.file-upload-section {
     font-size: 0.95rem;
   }
 }
-
 
 @media (max-width: 768px) {
   .service-cards {
@@ -404,5 +570,150 @@ select.file-upload-section {
 
   .header-link {
     font-size: 1.2rem;
+  }
+
+  .sub-skills-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .sub-category-header {
+    padding: 0.8rem;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .sub-skills-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.search-jobs-btn {
+  width: 100%;
+  padding: 0.75rem;
+  margin-top: 1rem;
+  background-color: rgba(189, 22, 22, 0.784);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.search-jobs-btn:hover:not(:disabled) {
+  background-color: rgba(189, 22, 22, 0.9);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+.search-jobs-btn:disabled {
+  background-color: rgba(189, 22, 22, 0.3);
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Hero Section */
+.hero-section {
+  text-align: center;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.hero-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: rgb(0, 0, 0);
+  margin-bottom: 0.5rem;
+}
+
+.hero-subtitle {
+  font-size: 1rem;
+  color: rgba(0, 0, 0, 0.7);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* Upload Container */
+.upload-container {
+  background-color: rgba(255, 255, 255, 0.395);
+  padding: 1rem 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+  width: 100%;
+  margin: 0 auto 1rem;
+  text-align: center;
+}
+
+.file-upload-section {
+  display: block;
+  margin: 1rem auto;
+  color: white;
+  background-color: transparent;
+  border: 2px dashed rgba(255, 255, 255, 0.4);
+  padding: 1rem;
+  border-radius: 10px;
+  cursor: pointer;
+  width: 100%;
+  font-size: 1rem;
+}
+
+.upload-icon {
+  color: white;
+  margin-bottom: 0.5rem;
+}
+
+.file-preview {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 0.5rem;
+  margin: 0.5rem 0;
+  color: white;
+}
+
+.file-preview span {
+  flex: 1;
+  font-size: 0.9rem;
+}
+
+/* Progress Bar */
+.progress-bar {
+  width: 100%;
+  height: 4px;
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 2px;
+  margin: 0.5rem 0;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background-color: rgba(189, 22, 22, 0.784);
+  transition: width 0.3s ease;
+}
+
+/* Loading Spinner */
+.loading-spinner {
+  display: inline-block;
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: white;
+  animation: spin 1s linear infinite;
+  margin-right: 0.5rem;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
   }
 }

@@ -1,47 +1,21 @@
 import React, { useRef, useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { FiUploadCloud, FiFile, FiCheck } from "react-icons/fi";
 import "./Homepage.css";
-
-const skillOptions = {
-  frontend: ["HTML", "CSS", "JavaScript", "React", "Vue", "Angular"],
-  backend: [
-    "Node.js",
-    "Express",
-    "Django",
-    "Flask",
-    "Ruby on Rails",
-    "Spring Boot",
-  ],
-  "data-science": [
-    "Python",
-    "R",
-    "Pandas",
-    "TensorFlow",
-    "PyTorch",
-    "Scikit-learn",
-  ],
-  "ui-ux": [
-    "Figma",
-    "Sketch",
-    "Adobe XD",
-    "InVision",
-    "Wireframing",
-    "Prototyping",
-  ],
-  devops: ["Docker", "Kubernetes", "AWS", "Azure", "CI/CD", "Terraform"],
-};
 
 const Homepage = () => {
   const fileInputRef = useRef(null);
   const [file, setFile] = useState(null);
   const [uploading, setUploading] = useState(false);
+  const [progress, setProgress] = useState(0);
   const [userEmail, setUserEmail] = useState(null);
   const [resumeUrl, setResumeUrl] = useState(null);
-  const [showHistory, setShowHistory] = useState(false);
+  const [error, setError] = useState("");
 
-  const [mainSkill, setMainSkill] = useState("");
-  const [selectedSubSkills, setSelectedSubSkills] = useState([]);
+  const [selectedSkills, setSelectedSkills] = useState([]);
+  const [expandedCategories, setExpandedCategories] = useState({});
+  const [otherSkill, setOtherSkill] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -81,6 +55,20 @@ const Homepage = () => {
     }
   };
 
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const droppedFile = e.dataTransfer.files[0];
+    if (droppedFile) {
+      setFile(droppedFile);
+    }
+  };
+
   const handleUpload = async () => {
     if (!userEmail) {
       alert("You need to login first to upload your resume.");
@@ -92,6 +80,14 @@ const Homepage = () => {
 
     try {
       setUploading(true);
+      setProgress(0);
+      setError("");
+
+      // Simulate upload progress
+      const interval = setInterval(() => {
+        setProgress((prev) => (prev >= 90 ? 90 : prev + 10));
+      }, 200);
+
       const fileContent = await encodeFileToBase64(file);
       const uploadData = { fileContent, fileName: file.name, email: userEmail };
 
@@ -101,15 +97,18 @@ const Homepage = () => {
         { headers: { "Content-Type": "application/json" } }
       );
 
+      clearInterval(interval);
+      setProgress(100);
+
       if (response.status === 200) {
-        alert("Resume uploaded successfully!");
+        // After successful S3 upload, navigate to parser
         navigate("/Resume-data/Data");
       } else {
-        alert("Upload failed. Try again.");
+        setError("Upload failed. Please try again.");
       }
     } catch (error) {
       console.error("Error uploading file:", error);
-      alert("Something went wrong!");
+      setError("Something went wrong! Please try again.");
     } finally {
       setUploading(false);
       setFile(null);
@@ -117,26 +116,176 @@ const Homepage = () => {
     }
   };
 
-  const handleMainSkillChange = (e) => {
-    setMainSkill(e.target.value);
-    setSelectedSubSkills([]);
+  const skillsMapping = {
+    "Software Development": {
+      description: "Programming & Software Development Skills",
+      subCategories: {
+        "Frontend Development": [
+          "HTML/CSS",
+          "JavaScript",
+          "React",
+          "Angular",
+          "Vue.js",
+          "TypeScript",
+          "Redux",
+          "Webpack",
+          "Bootstrap",
+          "Sass",
+        ],
+        "Backend Development": [
+          "Node.js",
+          "Python",
+          "Java",
+          "C#",
+          "PHP",
+          "Express.js",
+          "Django",
+          "Spring Boot",
+          "ASP.NET",
+          "Laravel",
+        ],
+        "Mobile Development": [
+          "React Native",
+          "Flutter",
+          "iOS",
+          "Android",
+          "Kotlin",
+          "Swift",
+          "Mobile UI/UX",
+        ],
+      },
+    },
+    "Database Management": {
+      description: "Database & Data Management Skills",
+      subCategories: {
+        "SQL Databases": [
+          "MySQL",
+          "PostgreSQL",
+          "Oracle",
+          "SQL Server",
+          "Database Design",
+          "Query Optimization",
+        ],
+        "NoSQL Databases": [
+          "MongoDB",
+          "Redis",
+          "Cassandra",
+          "Firebase",
+          "DynamoDB",
+          "Neo4j",
+        ],
+        "Data Tools": [
+          "Data Modeling",
+          "ETL",
+          "Data Migration",
+          "Data Warehousing",
+          "Database Administration",
+        ],
+      },
+    },
+    "Cloud Computing": {
+      description: "Cloud Platforms & Services",
+      subCategories: {
+        "Cloud Platforms": [
+          "AWS",
+          "Azure",
+          "Google Cloud",
+          "DigitalOcean",
+          "Heroku",
+          "IBM Cloud",
+        ],
+        "DevOps Tools": [
+          "Docker",
+          "Kubernetes",
+          "Jenkins",
+          "GitLab CI",
+          "GitHub Actions",
+          "Terraform",
+        ],
+        "Cloud Services": [
+          "Serverless",
+          "Microservices",
+          "Cloud Security",
+          "Load Balancing",
+          "Auto Scaling",
+        ],
+      },
+    },
+    "Data Science": {
+      description: "Data Science & Analytics",
+      subCategories: {
+        "Machine Learning": [
+          "TensorFlow",
+          "PyTorch",
+          "Scikit-learn",
+          "Deep Learning",
+          "Neural Networks",
+        ],
+        "Data Analysis": [
+          "Python",
+          "R",
+          "Pandas",
+          "NumPy",
+          "Data Visualization",
+          "Statistical Analysis",
+        ],
+        "Big Data": [
+          "Hadoop",
+          "Spark",
+          "Kafka",
+          "Big Data Analytics",
+          "Data Pipeline",
+        ],
+      },
+    },
   };
 
-  const handleSubSkillToggle = async (skill) => {
-    const updatedSkills = selectedSubSkills.includes(skill)
-      ? selectedSubSkills.filter((s) => s !== skill)
-      : [...selectedSubSkills, skill];
+  const toggleSubCategory = (category, subCategory) => {
+    setExpandedCategories((prev) => ({
+      ...prev,
+      [`${category}-${subCategory}`]: !prev[`${category}-${subCategory}`],
+    }));
+  };
 
-    setSelectedSubSkills(updatedSkills);
+  const handleSubSkillToggle = (category, subCategory, skill) => {
+    const skillWithCategory = `${category} - ${subCategory}: ${skill}`;
+    setSelectedSkills((prev) =>
+      prev.includes(skillWithCategory)
+        ? prev.filter((s) => s !== skillWithCategory)
+        : [...prev, skillWithCategory]
+    );
+  };
 
-    try {
-      await axios.post("http://localhost:5000/api/add-skill", {
-        skill,
-      });
-      console.log(`Skill "${skill}" stored successfully.`);
-    } catch (error) {
-      console.error("Error storing skill:", error);
+  const handleOtherSkillAdd = (e) => {
+    e.preventDefault();
+    if (otherSkill.trim()) {
+      setSelectedSkills((prev) => [...prev, `Other: ${otherSkill.trim()}`]);
+      setOtherSkill("");
     }
+  };
+
+  const removeSkill = (skill) => {
+    setSelectedSkills((prev) => prev.filter((s) => s !== skill));
+  };
+
+  const handleSearchJobs = () => {
+    // Format selected skills into a simpler array
+    const formattedSkills = selectedSkills.map(skill => {
+        // Extract just the skill name from the format "Category - SubCategory: SkillName"
+        const skillName = skill.split(': ')[1];
+        return skillName;
+    });
+
+    // Save to a JSON file
+    const jsonData = JSON.stringify({
+        skills: formattedSkills
+    }, null, 2);
+    
+    // Save to localStorage for Data.jsx to access
+    localStorage.setItem('selectedSkills', jsonData);
+
+    // Navigate to Data component
+    navigate('/Resume-data/Data');
   };
 
   return (
@@ -148,12 +297,9 @@ const Homepage = () => {
             {userEmail ? (
               <>
                 <li className="header-menu-item">
-                  <button
-                    className="header-link"
-                    onClick={() => setShowHistory(true)}
-                  >
+                  <Link to="/History" className="header-link">
                     History
-                  </button>
+                  </Link>
                 </li>
                 <li className="header-menu-item">
                   <button
@@ -162,7 +308,6 @@ const Homepage = () => {
                       sessionStorage.removeItem("userEmail");
                       setUserEmail(null);
                       setResumeUrl(null);
-                      setShowHistory(false);
                       navigate("/");
                     }}
                   >
@@ -207,49 +352,134 @@ const Homepage = () => {
           >
             {uploading ? "Uploading..." : "Upload and Match"}
           </button>
+          {error && (
+            <div className="error-message">
+              {error}
+            </div>
+          )}
         </article>
       </section>
 
       <section className="select-skills">
-        <h2>Select Main Skill</h2>
-        <select
-          className="skills-dropdown"
-          value={mainSkill}
-          onChange={handleMainSkillChange}
-        >
-          <option value="">-- Select a Skill Category --</option>
-          {Object.keys(skillOptions).map((key) => (
-            <option key={key} value={key}>
-              {key.replace("-", " ").toUpperCase()}
-            </option>
-          ))}
-        </select>
+        <article>
+          <h2>Select Your Skills</h2>
+          <div className="skills-container">
+            <div className="all-skills-sections">
+              {Object.entries(skillsMapping).map(([category, data]) => (
+                <div key={category} className="skill-section">
+                  <h3 className="skill-category-title">{category}</h3>
+                  <p className="skill-category-description">
+                    {data.description}
+                  </p>
 
-        {mainSkill && (
-          <div className="sub-skills-checkboxes">
-            <h3>Select Sub-skills</h3>
-            {skillOptions[mainSkill].map((subSkill) => (
-              <label key={subSkill} className="checkbox-label">
+                  <div className="sub-categories">
+                    {Object.entries(data.subCategories).map(
+                      ([subCategory, skills]) => (
+                        <div key={subCategory} className="sub-category">
+                          <button
+                            className={`sub-category-header ${
+                              expandedCategories[`${category}-${subCategory}`]
+                                ? "expanded"
+                                : ""
+                            }`}
+                            onClick={() =>
+                              toggleSubCategory(category, subCategory)
+                            }
+                          >
+                            <span>{subCategory}</span>
+                            <span className="dropdown-arrow">▼</span>
+                          </button>
+
+                          {expandedCategories[`${category}-${subCategory}`] && (
+                            <div className="sub-skills-grid">
+                              {skills.map((skill) => (
+                                <div key={skill} className="skill-checkbox">
+                  <input
+                    type="checkbox"
+                                    id={`${category}-${subCategory}-${skill}`}
+                                    checked={selectedSkills.includes(
+                                      `${category} - ${subCategory}: ${skill}`
+                                    )}
+                                    onChange={() =>
+                                      handleSubSkillToggle(
+                                        category,
+                                        subCategory,
+                                        skill
+                                      )
+                                    }
+                  />
+                                  <label
+                                    htmlFor={`${category}-${subCategory}-${skill}`}
+                                  >
+                                    {skill}
+                </label>
+                                </div>
+              ))}
+                            </div>
+                          )}
+                        </div>
+                      )
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Other Skills Input */}
+            <div className="other-skills-container">
+              <form
+                onSubmit={handleOtherSkillAdd}
+                className="other-skills-form"
+              >
                 <input
-                  type="checkbox"
-                  value={subSkill}
-                  checked={selectedSubSkills.includes(subSkill)}
-                  onChange={() => handleSubSkillToggle(subSkill)}
+                  type="text"
+                  className="other-skills-input"
+                  placeholder="Add other skills"
+                  value={otherSkill}
+                  onChange={(e) => setOtherSkill(e.target.value)}
                 />
-                {subSkill}
-              </label>
-            ))}
-          </div>
-        )}
-      </section>
+                <button
+                  type="submit"
+                  className="add-skill-btn"
+                  disabled={!otherSkill.trim()}
+                >
+                  Add Skill
+                </button>
+              </form>
+            </div>
 
-      <section className="selected-skills">
-        <h2>Selected Sub-Skills</h2>
-        <ul>
-          {selectedSubSkills.map((skill, index) => (
-            <li key={index}>{skill}</li>
-          ))}
-        </ul>
+            {/* Selected Skills Display */}
+            {selectedSkills.length > 0 && (
+              <div className="selected-skills">
+                <h3>Selected Skills</h3>
+                <div className="selected-skills-list-container">
+                  <div className="selected-skills-list">
+                    {selectedSkills.map((skill) => (
+                      <span key={skill} className="selected-skill-tag">
+                        {skill}
+                        <button
+                          className="remove-skill"
+                          onClick={() => removeSkill(skill)}
+                        >
+                          ×
+                        </button>
+                      </span>
+                    ))}
+                  </div>
+                </div>
+            </div>
+          )}
+
+            {/* Search Jobs Button */}
+            <button
+              className="search-jobs-btn"
+              onClick={handleSearchJobs}
+              disabled={selectedSkills.length === 0}
+            >
+              Search Jobs ({selectedSkills.length} skills selected)
+            </button>
+          </div>
+        </article>
       </section>
 
       <section className="services">
