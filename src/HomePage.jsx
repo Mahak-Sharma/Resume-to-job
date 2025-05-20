@@ -1,7 +1,6 @@
 import React, { useRef, useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { FiUploadCloud, FiFile, FiCheck } from "react-icons/fi";
 import "./Homepage.css";
 
 const Homepage = () => {
@@ -88,6 +87,7 @@ const Homepage = () => {
         setProgress((prev) => (prev >= 90 ? 90 : prev + 10));
       }, 200);
 
+      // First upload to S3
       const fileContent = await encodeFileToBase64(file);
       const uploadData = { fileContent, fileName: file.name, email: userEmail };
 
@@ -101,14 +101,43 @@ const Homepage = () => {
       setProgress(100);
 
       if (response.status === 200) {
-        // After successful S3 upload, navigate to parser
+        // Get the S3 file URL from the response
+        const s3FileUrl = response.data.fileUrl;
+        
+        // Create FormData for the resume parser
+        const formData = new FormData();
+        formData.append('file', file);
+
+        // Call the resume parser API
+        const parserResponse = await axios.post(
+          "http://localhost:5000/upload-resume",
+          formData,
+          {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+          }
+        );
+
+        // Store the parsed data in localStorage for Data.jsx to access
+        localStorage.setItem('parsedResumeData', JSON.stringify(parserResponse.data));
+        
+        // Store recommended jobs separately for easier access
+        localStorage.setItem('recommendedJobs', JSON.stringify(parserResponse.data.recommendedJobs));
+        
+        // Update selected skills based on extracted skills
+        const extractedSkills = parserResponse.data.extractedInfo.Skills;
+        const formattedSkills = extractedSkills.map(skill => `Extracted: ${skill}`);
+        setSelectedSkills(prev => [...new Set([...prev, ...formattedSkills])]);
+        
+        // Navigate to Data component
         navigate("/Resume-data/Data");
       } else {
         setError("Upload failed. Please try again.");
       }
     } catch (error) {
       console.error("Error uploading file:", error);
-      setError("Something went wrong! Please try again.");
+      setError(error.response?.data?.detail || "Something went wrong! Please try again.");
     } finally {
       setUploading(false);
       setFile(null);
@@ -269,6 +298,9 @@ const Homepage = () => {
   };
 
   const handleSearchJobs = () => {
+    // Get recommended jobs from localStorage
+    const recommendedJobs = JSON.parse(localStorage.getItem('recommendedJobs') || '[]');
+    
     // Format selected skills into a simpler array
     const formattedSkills = selectedSkills.map(skill => {
         // Extract just the skill name from the format "Category - SubCategory: SkillName"
@@ -276,13 +308,11 @@ const Homepage = () => {
         return skillName;
     });
 
-    // Save to a JSON file
-    const jsonData = JSON.stringify({
-        skills: formattedSkills
-    }, null, 2);
-    
     // Save to localStorage for Data.jsx to access
-    localStorage.setItem('selectedSkills', jsonData);
+    localStorage.setItem('selectedSkills', JSON.stringify({
+        skills: formattedSkills,
+        recommendedJobs: recommendedJobs // Include recommended jobs in the data
+    }));
 
     // Navigate to Data component
     navigate('/Resume-data/Data');
