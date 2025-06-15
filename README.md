@@ -82,7 +82,7 @@ A modern web application that helps job seekers find matching opportunities by a
 3. Set up environment variables:
    Create a `.env` file in the root directory with the following variables:
    ```
-   REACT_APP_API_ENDPOINT=https://daapx8kxod.execute-api.us-east-1.amazonaws.com/PROD
+   REACT_APP_API_ENDPOINT=https://your-AWS-API-Gateway-ID.execute-api.your-AWS-Region.amazonaws.com/PROD
    ```
 
 4. Start the development server:
