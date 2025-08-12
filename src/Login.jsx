@@ -37,6 +37,8 @@ const Login = () => {
             case "Login successful.":
               alert(`Logged in as: ${email}`);
               sessionStorage.setItem("userEmail", email);
+              // Dispatch custom event to notify other components
+              window.dispatchEvent(new CustomEvent('userLogin'));
               navigate("/");
               break;
 
@@ -73,6 +75,11 @@ const Login = () => {
         <div className="header-title">Resume-to-job Matcher</div>
         <nav className="header-nav">
           <ul className="header-menu">
+            <li className="header-menu-item">
+              <Link to="/" className="header-link home-link">
+                🏠 Home
+              </Link>
+            </li>
             <li className="header-menu-item">
               <Link to="/Signup" className="header-link">
                 SignUp

@@ -1,175 +1,348 @@
+/* Modern Professional Website Styles */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
+
 body, html {
   height: 100%;
   width: 100%;
-  font-family: 'Montserrat', sans-serif;
-  background: center/cover no-repeat fixed;
-  background-color: rgba(189, 22, 22, 0.784);
-  background-blend-mode: darken;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: linear-gradient(135deg, #8b5cf6 0%, #a855f7 25%, #c084fc 50%, #d8b4fe 75%, #e9d5ff 100%);
   overflow-x: hidden;
   scroll-behavior: smooth;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
+  color: #333;
+  line-height: 1.6;
 }
 
-body::-webkit-scrollbar {
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(139, 92, 246, 0.6);
+  border-radius: 4px;
+  transition: background 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(139, 92, 246, 0.8);
+}
+
+.signup-container {
+  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.1);
+  min-height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 80px;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* Header Styles */
+.header-layout {
+  position: sticky;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 80px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 0 2.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 1000;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.08);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.header-layout:hover {
+  background: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 12px 50px rgba(0, 0, 0, 0.12);
+}
+
+.header-title {
+  font-family: 'Inter', sans-serif;
+  font-size: 1.8rem;
+  font-weight: 900;
+  background: linear-gradient(135deg, #8b5cf6 0%, #a855f7 25%, #c084fc 50%, #d8b4fe 75%, #e9d5ff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: -0.8px;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.header-title::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 0;
+  height: 3px;
+  background: linear-gradient(135deg, #8b5cf6 0%, #a855f7 100%);
+  border-radius: 2px;
+  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.header-title:hover::after {
+  width: 100%;
+}
+
+.header-title:hover {
+  transform: translateY(-1px);
+  filter: drop-shadow(0 4px 8px rgba(139, 92, 246, 0.3));
+}
+
+.header-nav .header-menu {
+  list-style: none;
+  display: flex;
+  gap: 1rem;
+  margin: 0;
+  align-items: center;
+}
+
+.header-menu-item {
+  margin: 0;
+  position: relative;
+}
+
+.header-link {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 600;
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  border-radius: 0;
+  transition: all 0.3s ease;
+  position: relative;
+  font-size: 1.2rem;
+  letter-spacing: -0.2px;
+}
+
+.header-link::before {
   display: none;
 }
 
-  .signup-container {
-    backdrop-filter: blur(5px);
-    background-color: rgba(255, 255, 255, 0.1);
-    min-height: 100vh;
-    width: 100vw;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding-top: 80px;
-    overflow-x: hidden;
-    position: relative;
-  }
+.header-link:hover {
+  color: #e9d5ff;
+  transform: none;
+  box-shadow: none;
+  text-decoration: underline;
+}
+
+.header-link:active {
+  transform: none;
+}
+
+/* Home button specific styling */
+.home-link {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  border: none;
+  font-weight: 600;
+  padding: 0.6rem 1.2rem;
+}
+
+.home-link:hover {
+  background: linear-gradient(135deg, #5a6fd8, #6a4190);
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+.glass-card-signup {
+  margin-top: 40px;
+  background: rgba(255, 255, 255, 0.15);
+  color: #000;
+  border-radius: 20px;
+  padding: 2.5rem;
+  width: 90%;
+  max-width: 600px;
+  margin-bottom: 2rem;
+  text-align: center;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-card-signup:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.glass-card-signup h2 {
+  font-size: 2.4rem;
+  margin-bottom: 1.5rem;
+  font-weight: 700;
+  color: #1f2937;
+  background: linear-gradient(135deg, #8b5cf6 0%, #a855f7 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.glass-card-signup input,
+.glass-card-signup select {
+  width: 100%;
+  padding: 1rem;
+  margin-bottom: 1.2rem;
+  border-radius: 12px;
+  border: 2px solid transparent;
+  outline: none;
+  background: rgba(255, 255, 255, 0.9);
+  color: #1f2937;
+  transition: all 0.3s ease;
+  font-size: 1rem;
+  font-family: 'Inter', sans-serif;
+}
+
+.glass-card-signup input:focus,
+.glass-card-signup select:focus {
+  border-color: #8b5cf6;
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.1);
+  transform: translateY(-2px);
+}
+
+.glass-card-signup input::placeholder {
+  color: #6b7280;
+}
+
+.glass-card-signup select {
+  color: #1f2937;
+}
+
+.glass-card-signup button {
+  width: 100%;
+  padding: 1rem;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #8b5cf6 0%, #a855f7 100%);
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 1rem;
+  font-family: 'Inter', sans-serif;
+  box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+}
+
+.glass-card-signup button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(139, 92, 246, 0.4);
+  background: linear-gradient(135deg, #7c3aed 0%, #9333ea 100%);
+}
+
+.glass-card-signup button:active {
+  transform: translateY(0);
+}
+
+.login-link {
+  margin-top: 1.5rem;
+  font-size: 1.4rem;
+  color: #4b5563;
+}
+
+.login-link a {
+  color: #8b5cf6;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.login-link a:hover {
+  text-decoration: underline;
+  color: #7c3aed;
+}
+
+/* Login Button */
+.login-btn {
+  background: none;
+  color: white;
+  border: none;
+  padding: 0.875rem 1.75rem;
+  border-radius: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  font-size: 1.2rem;
+  letter-spacing: -0.2px;
+  position: relative;
+}
+
+.login-btn:hover {
+  color: #e9d5ff;
+  transform: none;
+  box-shadow: none;
+  text-decoration: underline;
+}
+
+.login-btn:active {
+  transform: none;
+}
+
+/* Responsive header styles */
+@media (max-width: 768px) {
   .header-layout {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    background-color: rgba(0, 0, 0, 0.273);
-    color: white;
-    padding: 15px 15px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-family: "Cambria", Cochin, Georgia, Times, "Times New Roman", serif;
-    font-size: 30px;
-    font-weight: 900;
-    z-index: 5;
-    }
+    padding: 0 1.5rem;
+    height: 70px;
+  }
+
   .header-title {
-    font-family: "Courier New", Courier, monospace;
-    padding-left: 10px;
+    font-size: 1.5rem;
+    letter-spacing: -0.5px;
+  }
+
+  .header-nav .header-menu {
+    gap: 1rem;
+  }
+
+  .header-link {
+    padding: 0.75rem 1.25rem;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .header-layout {
+    padding: 0 1rem;
+    height: 65px;
+  }
+  
+  .header-title {
+    font-size: 1.3rem;
+    letter-spacing: -0.3px;
   }
   
   .header-nav .header-menu {
-    list-style: none;
-    display: flex;
-    gap: 20px;
-    padding: 0;
-    margin: 0;
-  }
-  
-  .header-menu-item {
-    margin-right: 10px;
-  }
-  
-  .header-menu-item:hover {
-    transform: scale(1.1);
+    gap: 1rem;
   }
   
   .header-link {
-    color: white;
-    text-decoration: none;
-  }
-  
-  .header-link:hover {
-    text-decoration: underline;
-  }
-  
-  .glass-card-signup {
-    margin-top: 40px;
-    background-color: rgba(255, 255, 255, 0.5);
-    color: #000;
-    border-radius: 16px;
-    padding: 2rem;
-    width: 90%;
-    max-width: 600px;
-    margin-bottom: 2rem;
-    text-align: center;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-    backdrop-filter: blur(10px);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-  }
-  
-  .glass-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
-  }
-  .glass-card-signup h2 {
-    font-size: 2.4rem;
-    margin-bottom: 1rem;
-    font-weight: bold;
-    color: rgba(0, 0, 0, 0.8);
-  }
-  
-  .glass-card-signup input,
-  .glass-card-signup select {
-    width: 100%;
-    padding: 1rem;
-    margin-bottom: 1.2rem;
+    padding: 0.625rem 1rem;
+    font-size: 0.85rem;
     border-radius: 12px;
-    border: 2px solid transparent;
-    outline: none;
-    background: rgba(255, 255, 255, 0.8);
-    color: rgb(0, 0, 0);
-    transition: all 0.3s ease;
-    font-size: 1rem;
   }
-  .glass-card input:focus,
-  .glass-card select:focus {
-    border-color: rgba(189, 22, 22, 0.5);
-    background: rgba(255, 255, 255, 0.95);
-    box-shadow: 0 0 0 4px rgba(189, 22, 22, 0.1);
-  }
-  .glass-card-signup input::placeholder {
-    color: rgb(0, 0, 0);
-  }
-  
-  .glass-card-signup select {
-    color: #000000;
-  }
-  
-  .glass-card-signup button {
-    width: 100%;
-    padding: 0.75rem;
-    border: none;
-    border-radius: 10px;
-    background-color: rgba(189, 22, 22, 0.8);
-    color: rgb(255, 255, 255);
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    transition: all 0.3s ease;
-    font-size: 1rem;
-  }
-  
-  .glass-card-signup button:hover {
-    opacity: 0.9;
-  }
-  
-  .login-link {
-    margin-top: 1rem;
-    font-size: 1.4rem;
-  }
-  
-  .login-link a {
-    color: #0800ff;
-    text-decoration: none;
-  }
-  
-  .login-link a:hover {
-    text-decoration: underline;
-  }
-  
-  @media (max-width: 768px) {
-    .header-title {
-      font-size: 2rem;
-    }
-  
-    .header-link {
-      font-size: 2rem;
-    }
-  }
+}
   
