@@ -7,12 +7,53 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+# Dependencies
 node_modules
 dist
 dist-ssr
 *.local
 
-# Editor directories and files
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual Environment
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+.venv/
+.env
+
+# Python Environment Variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# IDE and Editor
 .vscode/*
 !.vscode/extensions.json
 .idea
@@ -22,3 +63,161 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# OS generated files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Temporary files
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Upload and output directories
+uploads/
+output/
+debug/
+
+# API keys and secrets
+*.pem
+*.key
+*.p12
+*.pfx
+
+# Logs and debugging
+*.log
+debug/
+logs/
+
+# Cache directories
+.cache/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# pyenv
+.python-version
+
+# pipenv
+Pipfile.lock
+
+# PEP 582
+__pypackages__/
+
+# Celery
+celerybeat-schedule
+celerybeat.pid
+
+# SageMath parsed files
+*.sage.py
+
+# Spyder project settings
+.spyderproject
+.spyproject
+
+# Rope project settings
+.ropeproject
+
+# mkdocs documentation
+/site
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pyre type checker
+.pyre/
+
+# pytype static type analyzer
+.pytype/
+
+# Cython debug symbols
+cython_debug/
+
+# Project specific exclusions
+backend/uploads/
+backend/output/
+backend/debug/
+backend/venv/
+backend/*.pyc
+backend/__pycache__/
+
+# Frontend specific
+src/Resume-data/*.csv
+src/Resume-data/*.json
+src/Resume-data/*.ipynb
+
+# Build artifacts
+build/
+dist/
+*.tgz
+*.tar.gz
+
+# Environment and configuration
+config.json
+secrets.json
+credentials.json
+*.config.js
+.env*
+
+# Backup files
+*.bak
+*.backup
+*.old
+
+# System files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Windows specific
+*.lnk
+*.exe
+*.msi
+*.dll
+
+# Linux specific
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+
+# macOS specific
+.AppleDouble
+.LSOverride
+Icon
+._*
+
+# Package manager files
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Testing
+coverage/
+.nyc_output/
+.jest/
+
+# Documentation build
+docs/_build/
+site/
+
+# Local development
+.local/
+local/
