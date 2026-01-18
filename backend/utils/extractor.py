@@ -28,28 +28,29 @@ print("Loading NLP models...")
 nlp = load_spacy_model()
 stop_words = set(stopwords.words('english'))
 
-# Initialize additional skill lists
 TECH_KEYWORDS = [
-    'python', 'java', 'javascript', 'c++', 'c#', 'ruby', 'php', 'swift', 'kotlin', 'typescript',
-    'html', 'css', 'sql', 'nosql', 'mongodb', 'postgresql', 'mysql', 'oracle', 'redis',
-    'react', 'angular', 'vue', 'node', 'express', 'django', 'flask', 'spring', 'hibernate',
-    'aws', 'azure', 'gcp', 'google cloud', 'docker', 'kubernetes', 'jenkins', 'terraform',
-    'git', 'github', 'gitlab', 'bitbucket', 'jira', 'confluence', 'agile', 'scrum', 'kanban',
-    'linux', 'unix', 'windows', 'macos', 'android', 'ios', 'rest', 'graphql', 'api',
-    'machine learning', 'deep learning', 'ai', 'artificial intelligence', 'data science',
-    'hadoop', 'spark', 'tableau', 'power bi', 'excel', 'word', 'powerpoint', 'photoshop',
-    'illustrator', 'sketch', 'figma', 'ui', 'ux', 'seo', 'automation', 'testing'
-]
+    'Python', 'Java', 'JavaScript', 'C++', 'C#', 'Ruby', 'PHP', 'Swift', 'Kotlin', 'TypeScript',
+    'HTML', 'CSS', 'SQL', 'NoSQL', 'MongoDB', 'PostgreSQL', 'MySQL', 'Oracle', 'Redis',
+    'React', 'Angular', 'Vue', 'Node.js', 'Express.js', 'Django', 'Flask', 'Spring', 'Hibernate',
+    'AWS', 'Azure', 'GCP', 'Google Cloud', 'Docker', 'Kubernetes', 'Jenkins', 'Terraform',
+    'Git', 'GitHub', 'GitLab', 'Bitbucket', 'Jira', 'Confluence', 'Agile', 'Scrum', 'Kanban',
+    'Linux', 'Unix', 'Windows', 'macOS', 'Android', 'iOS', 'REST', 'GraphQL', 'API',
+    'Machine Learning', 'Deep Learning', 'AI', 'Artificial Intelligence', 'Data Science',
+    'Hadoop', 'Apache Spark', 'Tableau', 'Power BI', 'Microsoft Excel', 'Microsoft Word', 'Microsoft PowerPoint',
+    'Adobe Photoshop', 'Adobe Illustrator', 'Sketch', 'Figma',
+    'UI', 'UX', 'SEO', 'Automation', 'Testing'
+    ]
 
-# Let's add education-related keywords to help extract education info
+# Education-related keywords with standard technical/academic casing
 EDUCATION_KEYWORDS = [
-    'bachelor', 'b.tech', 'b.e.', 'btech', 'be', 'bs', 'b.s.',
-    'master', 'm.tech', 'mtech', 'ms', 'm.s.', 'mba', 'phd',
-    'engineering', 'computer science', 'information technology',
-    'university', 'college', 'institute', 'school',
-    'graduate', 'undergraduate', 'postgraduate',
-    'degree', 'diploma', 'certification'
-]
+    'Bachelor', 'B.Tech', 'B.E.', 'BTech', 'BE', 'BS', 'B.S.',
+    'Master', 'M.Tech', 'MTech', 'MS', 'M.S.', 'MBA', 'PhD',
+    'Engineering', 'Computer Science', 'Information Technology',
+    'University', 'College', 'Institute', 'School',
+    'Graduate', 'Undergraduate', 'Postgraduate',
+    'Degree', 'Diploma', 'Certification'
+    ]
+
 
 def preprocess_text(text):
     """
@@ -131,20 +132,97 @@ def extract_skills(text):
     """
     # Additional technical skills to supplement the main skills database
     ADDITIONAL_SKILLS = [
-        'AWS', 'Azure', 'GCP', 'Docker', 'Kubernetes', 'Jenkins', 'Terraform',
-        'Flask', 'Django', 'FastAPI', 'Spring Boot', 'Express.js', 'Vue.js',
-        'Angular', 'TensorFlow', 'PyTorch', 'Scikit-learn', 'Pandas', 'NumPy',
-        'Redux', 'GraphQL', 'TypeScript', 'Sass', 'Less', 'Webpack', 'Babel',
-        'Jest', 'Mocha', 'Selenium', 'Cypress', 'JUnit', 'Maven', 'Gradle',
-        'Redis', 'PostgreSQL', 'MySQL', 'Oracle', 'ElasticSearch', 'Kafka',
-        'RabbitMQ', 'Microservices', 'RESTful APIs', 'SOAP', 'OAuth',
-        'JWT', 'LDAP', 'Active Directory', 'Nginx', 'Apache', 'Linux',
-        'Bash', 'PowerShell', 'Ansible', 'Puppet', 'Chef', 'Prometheus',
-        'Grafana', 'ELK Stack', 'Tableau', 'Power BI', 'Looker'
+    'AWS', 'Azure', 'GCP', 'Docker', 'Kubernetes', 'Jenkins', 'Terraform',
+    'Flask', 'Django', 'FastAPI', 'Spring Boot', 'Express.js', 'Vue.js',
+    'Angular', 'TensorFlow', 'PyTorch', 'scikit-learn', 'Pandas', 'NumPy',
+    'Redux', 'GraphQL', 'TypeScript', 'Sass', 'Less', 'Webpack', 'Babel',
+    'Jest', 'Mocha', 'Selenium', 'Cypress', 'JUnit', 'Maven', 'Gradle',
+    'Redis', 'PostgreSQL', 'MySQL', 'Oracle', 'Elasticsearch', 'Apache Kafka',
+    'RabbitMQ', 'Microservices', 'RESTful APIs', 'SOAP', 'OAuth',
+    'JWT', 'LDAP', 'Active Directory', 'Nginx', 'Apache HTTP Server', 'Linux',
+    'Bash', 'PowerShell', 'Ansible', 'Puppet', 'Chef', 'Prometheus',
+    'Grafana', 'ELK Stack', 'Tableau', 'Power BI', 'Looker'
     ]
 
+
     # Base skills database
-    SKILLS_DB = ['3D Design', '3D Graphics', '3D Mathematics', '3D Modeling', '3D Modeling Tools', '3D Programming', 'Adobe Creative Suite', 'Agile Methodology', 'Ai', 'Ajax', 'Algorithms', 'Animation', 'Animation Software', 'Apis', 'App Distribution Process', 'Application Frameworks', 'Ar Toolkits', 'Assembly Language', 'Audio Editing Software', 'Auditory Aesthetics', 'Back-End Programming', 'Big Data', 'Blockchain Technology', 'Branding', 'Bus Communications', 'Business Acumen', 'C', 'C#', 'C++', 'Cad', 'Ci/Cd', 'Cloud Platforms', 'Cloud Security', 'Code Efficiency', 'Color Theory', 'Command Line', 'Consensus Methods', 'Consistency', 'Containerization', 'Content Organization', 'Content Strategy', 'Copywriting', 'Cross-Browser Compatibility', 'Cross-Functional Collaboration', 'Cryptography', 'Css', 'Css Pre-Processors', 'Customer Journey Mapping', 'Cyber Security', 'Data Analysis', 'Data Backup And Recovery', 'Data Modeling', 'Data Science', 'Data Structures', 'Data Visualization', 'Data Warehousing', 'Database Design Principles', 'Database Management', 'Database Performance', 'Database Security Principles', 'Database Structures', 'Database Systems', 'Databases', 'Debugging', 'Deep Learning', 'Design Systems', 'Devops Practices', 'Distributed Computing', 'Embedded C/C++', 'Embedded Systems', 'Emerging Technology Familiarity', 'Ergonomic Design', 'Etl Processes', 'Front-End Frameworks', 'Game Design Principles', 'Game Distribution Platforms', 'Game Mechanics', 'Game Physics', 'Game Testing And Debugging', 'Git', 'Go', 'Graphic Design', 'Graphics Programming', 'Hardware Architecture', 'Hardware Tools', 'High-Performance Computing', 'Html', 'Incident Management', 'Incident Response', 'Infrastructure As Code (Iac)', 'Java', 'Javascript', 'Javascript Frameworks', 'Jquery', 'Kotlin', 'Lighting', 'Machine Learning', 'Market Research', 'Material Knowledge', 'Mathematics', 'Microcontroller Programming', 'Mobile App Lifecycle', 'Mobile App Security', 'Mobile Sdks', 'Mobile Ui/Ux', 'Mongodb', 'Monitoring And Alerting Tools', 'Multiplayer Network Programming', 'Multithreading', 'Network Configuration', 'Network Programming', 'Networking', 'Node.Js', 'Nosql Databases', 'Operating Systems', 'Orchestration', 'P2P Networks', 'Package Managers', 'Print Design', 'Product Design', 'Prototyping', 'Prototyping Tools', 'Python', 'R', 'React Native', 'Reactjs', 'Real-Time Operating Systems', 'Recording Equipment', 'Responsive Design', 'Restful Apis', 'Rtos', 'Ruby', 'Schema Design', 'Seo Basics', 'Server Architecture', 'Server-Side Frameworks', 'Serverless Architecture', 'Service Design', 'Smart Contract Development', 'Software Proficiency', 'Software Testing', 'Solidity', 'Sound Design', 'Spatial Audio', 'Spatial Design', 'Spatial Understanding', 'Sql', 'Statistical Analysis', 'Storyboarding', 'Storytelling', 'Surveys', 'Swift', 'System Administration', 'System Architecture', 'Taxonomy Development', 'Testing And Qa', 'Texture Mapping', 'Timing', 'Typography', 'Unity & Unreal Engine', 'Unix/Linux Environments', 'Usability Testing', 'User Empathy', 'User Experience Design', 'User Interface Design', 'User Interviews', 'User Personas', 'User Research', 'User Testing', 'User-Centered Design', 'Ux Design Principles', 'Ux Research', 'Version Control', 'Video Editing', 'Vr And Ar Sdks', 'Vr Platform Knowledge', 'Web Accessibility', 'Web Security', 'Wireframing']
+    SKILLS_DB = [
+    '3D Design', '3D Graphics', '3D Mathematics', '3D Modeling',
+    '3D Modeling Tools', '3D Programming', 'Adobe Creative Suite',
+    'Agile Methodology', 'AI', 'AJAX', 'Algorithms', 'Animation',
+    'Animation Software', 'APIs', 'App Distribution Process',
+    'Application Frameworks', 'AR Toolkits', 'Assembly Language',
+    'Audio Editing Software', 'Auditory Aesthetics',
+    'Back-End Programming', 'Big Data', 'Blockchain Technology',
+    'Branding', 'Bus Communications', 'Business Acumen',
+    'C', 'C#', 'C++', 'CAD', 'CI/CD', 'Cloud Platforms',
+    'Cloud Security', 'Code Efficiency', 'Color Theory',
+    'Command Line', 'Consensus Methods', 'Consistency',
+    'Containerization', 'Content Organization', 'Content Strategy',
+    'Copywriting', 'Cross-Browser Compatibility',
+    'Cross-Functional Collaboration', 'Cryptography',
+    'CSS', 'CSS Preprocessors', 'Customer Journey Mapping',
+    'Cybersecurity', 'Data Analysis', 'Data Backup and Recovery',
+    'Data Modeling', 'Data Science', 'Data Structures',
+    'Data Visualization', 'Data Warehousing',
+    'Database Design Principles', 'Database Management',
+    'Database Performance', 'Database Security Principles',
+    'Database Structures', 'Database Systems', 'Databases',
+    'Debugging', 'Deep Learning', 'Design Systems',
+    'DevOps Practices', 'Distributed Computing',
+    'Embedded C/C++', 'Embedded Systems',
+    'Emerging Technology Familiarity', 'Ergonomic Design',
+    'ETL Processes', 'Front-End Frameworks',
+    'Game Design Principles', 'Game Distribution Platforms',
+    'Game Mechanics', 'Game Physics',
+    'Game Testing and Debugging', 'Git', 'Go',
+    'Graphic Design', 'Graphics Programming',
+    'Hardware Architecture', 'Hardware Tools',
+    'High-Performance Computing', 'HTML',
+    'Incident Management', 'Incident Response',
+    'Infrastructure as Code (IaC)', 'Java', 'JavaScript',
+    'JavaScript Frameworks', 'jQuery', 'Kotlin',
+    'Lighting', 'Machine Learning', 'Market Research',
+    'Material Knowledge', 'Mathematics',
+    'Microcontroller Programming',
+    'Mobile App Lifecycle', 'Mobile App Security',
+    'Mobile SDKs', 'Mobile UI/UX', 'MongoDB',
+    'Monitoring and Alerting Tools',
+    'Multiplayer Network Programming', 'Multithreading',
+    'Network Configuration', 'Network Programming',
+    'Networking', 'Node.js', 'NoSQL Databases',
+    'Operating Systems', 'Orchestration',
+    'P2P Networks', 'Package Managers',
+    'Print Design', 'Product Design', 'Prototyping',
+    'Prototyping Tools', 'Python', 'R',
+    'React Native', 'React.js',
+    'Real-Time Operating Systems',
+    'Recording Equipment', 'Responsive Design',
+    'RESTful APIs', 'RTOS', 'Ruby',
+    'Schema Design', 'SEO Basics',
+    'Server Architecture', 'Server-Side Frameworks',
+    'Serverless Architecture', 'Service Design',
+    'Smart Contract Development', 'Software Proficiency',
+    'Software Testing', 'Solidity', 'Sound Design',
+    'Spatial Audio', 'Spatial Design',
+    'Spatial Understanding', 'SQL',
+    'Statistical Analysis', 'Storyboarding',
+    'Storytelling', 'Surveys', 'Swift',
+    'System Administration', 'System Architecture',
+    'Taxonomy Development', 'Testing and QA',
+    'Texture Mapping', 'Timing', 'Typography',
+    'Unity and Unreal Engine',
+    'Unix/Linux Environments',
+    'Usability Testing', 'User Empathy',
+    'User Experience Design', 'User Interface Design',
+    'User Interviews', 'User Personas',
+    'User Research', 'User Testing',
+    'User-Centered Design',
+    'UX Design Principles', 'UX Research',
+    'Version Control', 'Video Editing',
+    'VR and AR SDKs', 'VR Platform Knowledge',
+    'Web Accessibility', 'Web Security', 'Wireframing' ]
+
     # Combine all skills into one comprehensive database
     SKILLS_DB = SKILLS_DB + ADDITIONAL_SKILLS  
     

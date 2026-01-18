@@ -31,114 +31,75 @@ const Data = () => {
         setLoading(true);
         setError(null);
 
-        // Get selected skills and parsed resume data from sessionStorage
         const selectedSkillsJson = sessionStorage.getItem("selectedSkills");
         const parsedResumeData = JSON.parse(
-          sessionStorage.getItem("parsedResumeData") || "{}"
+          sessionStorage.getItem("parsedResumeData") || "{}",
         );
 
-        if (!selectedSkillsJson && !parsedResumeData?.extractedInfo?.Skills) {
+        let allSkills = [];
+
+        if (parsedResumeData?.extractedInfo?.Skills) {
+          console.log("parsedResumeData: ", parsedResumeData);
+          allSkills = [...parsedResumeData.extractedInfo.Skills];
+          console.log("All Skills: ", allSkills);
+        }
+
+        if (selectedSkillsJson) {
+          const selectedSkills = JSON.parse(selectedSkillsJson);
+          selectedSkills.skills?.forEach((skill) => {
+            if (!allSkills.includes(skill)) {
+              allSkills.push(skill);
+            }
+          });
+        }
+
+        allSkills = allSkills
+          .map((s) => s.replace("Extracted: ", "").trim())
+          .filter(Boolean);
+
+        if (allSkills.length === 0) {
           setError("No skills available for job search");
-          setLoading(false);
           return;
         }
 
-        // Combine extracted skills from resume with manually selected skills
-        let allSkills = [];
+        const params = new URLSearchParams();
+        parsedResumeData.recommendedJobs.slice(0, 5).forEach((job) => {
+          params.append("job_titles", job.title);
+        });
 
-        // Add extracted skills from resume
-        if (parsedResumeData?.extractedInfo?.Skills) {
-          allSkills = [...parsedResumeData.extractedInfo.Skills];
+        const response = await fetch(
+          `http://localhost:5000/jobs/search?${params.toString()}`,
+        );
+        console.log("Jobs fetch ho gai hainn");
+        if (!response.ok) {
+          throw new Error("Failed to fetch jobs");
         }
 
-        // Add manually selected skills
-        if (selectedSkillsJson) {
-          const selectedSkills = JSON.parse(selectedSkillsJson);
-          if (selectedSkills.skills) {
-            // Add only unique skills that aren't already in allSkills
-            selectedSkills.skills.forEach((skill) => {
-              if (!allSkills.includes(skill)) {
-                allSkills.push(skill);
-              }
-            });
-          }
-        }
+        const data = await response.json();
+        const formattedJobs = data.jobs.map((job) => {
+          const description = job.description.toLowerCase();
 
-        // Remove any "Extracted: " prefix from skills
-        allSkills = allSkills.map((skill) => skill.replace("Extracted: ", ""));
+          const matchingSkills = allSkills.filter((skill) =>
+            description.includes(skill.toLowerCase()),
+          );
 
-        // Fetch jobs for each skill individually
-        const allJobs = [];
-        const jobsPerSkill = 10; // Number of jobs to fetch per skill
-        const baseUrl = "http://api.adzuna.com/v1/api/jobs/in/search";
-        const apiId = "f66bacc5";
-        const apiKey = "ea685254132fbfdb7cce7e5477886a38";
+          return {
+            ...job,
+            matching_skills: matchingSkills,
+            skill_match_score: Math.round(
+              (matchingSkills.length / allSkills.length) * 100,
+            ),
+            created_at: new Date(job.created_at).toLocaleDateString(),
+          };
+        });
 
-        // Create a Set to track unique job IDs
-        const uniqueJobIds = new Set();
+        formattedJobs.sort((a, b) => b.skill_match_score - a.skill_match_score);
 
-        // Fetch jobs for each skill
-        for (const skill of allSkills) {
-          const encodedSkill = encodeURIComponent(skill);
-          const url = `${baseUrl}/1?app_id=${apiId}&app_key=${apiKey}&results_per_page=${jobsPerSkill}&what=${encodedSkill}&content-type=application/json&sort_by=relevance`;
-
-          try {
-            const response = await fetch(url);
-            const data = await response.json();
-
-            if (data.results) {
-              // Format jobs data and add skill match information
-              const formattedJobs = data.results.map((job) => {
-                // Calculate how many of the user's skills match this job's description
-                const jobDescription = job.description.toLowerCase();
-                const matchingSkills = allSkills.filter((s) =>
-                  jobDescription.includes(s.toLowerCase())
-                );
-
-                return {
-                  id: job.id, // Add job ID for uniqueness check
-                  title: job.title,
-                  company_name: job.company.display_name,
-                  location: job.location.display_name,
-                  description: job.description,
-                  apply_link: job.redirect_url,
-                  category: job.category.label,
-                  salary_min: job.salary_min,
-                  salary_max: job.salary_max,
-                  contract_type: job.contract_type,
-                  created_at: new Date(job.created).toLocaleDateString(),
-                  matching_skills: matchingSkills,
-                  skill_match_score: Math.round(
-                    (matchingSkills.length / allSkills.length) * 100
-                  ),
-                  matched_skill: skill, // Track which skill matched this job
-                };
-              });
-
-              // Add only unique jobs based on job ID
-              formattedJobs.forEach((job) => {
-                if (!uniqueJobIds.has(job.id)) {
-                  uniqueJobIds.add(job.id);
-                  allJobs.push(job);
-                }
-              });
-
-              setTotalResults((prev) => prev + (data.count || 0));
-            }
-          } catch (err) {
-            console.error(`Error fetching jobs for skill ${skill}:`, err);
-            // Continue with next skill even if one fails
-            continue;
-          }
-        }
-
-        // Sort jobs by skill match score
-        allJobs.sort((a, b) => b.skill_match_score - a.skill_match_score);
-
-        setJobs(allJobs);
+        setJobs(formattedJobs);
+        setTotalResults(data.count);
       } catch (err) {
-        setError("Failed to fetch jobs. Please try again.");
-        console.error("Error fetching jobs:", err);
+        console.error(err);
+        setError("Failed to fetch jobs");
       } finally {
         setLoading(false);
       }
@@ -148,9 +109,10 @@ const Data = () => {
   }, [userEmail, navigate]);
 
   const totalPages = Math.ceil(jobs.length / ITEMS_PER_PAGE);
+  console.log(jobs);
   const currentJobs = jobs.slice(
     (currentPage - 1) * ITEMS_PER_PAGE,
-    currentPage * ITEMS_PER_PAGE
+    currentPage * ITEMS_PER_PAGE,
   );
 
   if (loading) {
@@ -164,7 +126,6 @@ const Data = () => {
   if (error) {
     return <div className="error">{error}</div>;
   }
-
   return (
     <div className="job-matches-container">
       {parsedResumeData && (
@@ -218,6 +179,8 @@ const Data = () => {
         Found {jobs.length} matching positions out of {totalResults} total jobs
       </div>
       <div className="job-list">
+        <div>{console.log("Job-list dikhri")}</div>
+        <div>{console.log(currentJobs)}</div>
         {currentJobs.length > 0 ? (
           currentJobs.map((job, index) => (
             <div key={index} className="job-card">
@@ -228,9 +191,9 @@ const Data = () => {
                   <span className="skill-match-score">
                     Skill Match: {job.skill_match_score}%
                   </span>
-                  <span className="matched-skill">
+                  {/* <span className="matched-skill">
                     Matched via: {job.matched_skill}
-                  </span>
+                  </span> */}
                 </div>
               </div>
               <p>
@@ -259,6 +222,7 @@ const Data = () => {
               <p>
                 <strong>Posted:</strong> {job.created_at}
               </p>
+              <div>{console.log("dabba dikh gaya")}</div>
               {job.matching_skills && job.matching_skills.length > 0 && (
                 <div className="matching-skills">
                   <strong>Matching Skills:</strong>
