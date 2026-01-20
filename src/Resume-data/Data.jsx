@@ -43,7 +43,7 @@ const Data = () => {
           allSkills = [...parsedResumeData.extractedInfo.Skills];
           console.log("All Skills: ", allSkills);
         }
-
+        console.log(parsedResumeData.recommendedJobs);
         if (selectedSkillsJson) {
           const selectedSkills = JSON.parse(selectedSkillsJson);
           selectedSkills.skills?.forEach((skill) => {
@@ -63,36 +63,73 @@ const Data = () => {
         }
 
         const params = new URLSearchParams();
-        parsedResumeData.recommendedJobs.slice(0, 5).forEach((job) => {
-          params.append("job_titles", job.title);
-        });
+
+        // 1️⃣ Try recommender titles first (resume upload)
+        if (
+          parsedResumeData?.recommendedJobs &&
+          parsedResumeData.recommendedJobs.length > 0
+        ) {
+          parsedResumeData.recommendedJobs.slice(0, 5).forEach((job) => {
+            if (job?.title) {
+              params.append("job_titles", job.title);
+            }
+          });
+        }
+
+        // 2️⃣ Fallback to skills (manual search)
+        if (!params.toString()) {
+          parsedResumeData?.extractedInfo?.Skills?.slice(0, 5).forEach(
+            (skill) => {
+              if (typeof skill === "string") {
+                params.append("job_titles", skill);
+              }
+            },
+          );
+        }
+
+        // 3️⃣ Absolute safety check (prevents 422)
+        if (!params.toString()) {
+          setError("No job titles or skills available for search");
+          return;
+        }
+
+        console.log("QUERY STRING:", params.toString());
 
         const response = await fetch(
           `http://localhost:5000/jobs/search?${params.toString()}`,
         );
-        console.log("Jobs fetch ho gai hainn");
         if (!response.ok) {
           throw new Error("Failed to fetch jobs");
         }
 
         const data = await response.json();
         const formattedJobs = data.jobs.map((job) => {
-          const description = job.description.toLowerCase();
+          const description = (job.description || "").toLowerCase();
 
+          // ✅ calculate matching skills properly
+          // ✅ calculate matching skills per job
           const matchingSkills = allSkills.filter((skill) =>
             description.includes(skill.toLowerCase()),
           );
 
+          // ✅ count ONLY job-related words (job-specific denominator)
+          const jobWords = new Set(description.split(/\W+/)).size;
+
+          // ✅ job-specific normalized score
+          const skillMatchScore =
+            matchingSkills.length > 0
+              ? Math.round((matchingSkills.length / jobWords) * 300)
+              : 0;
+
           return {
             ...job,
             matching_skills: matchingSkills,
-            skill_match_score: Math.round(
-              (matchingSkills.length / allSkills.length) * 100,
-            ),
+            skill_match_score: skillMatchScore,
             created_at: new Date(job.created_at).toLocaleDateString(),
           };
         });
 
+        // ✅ SORT JOBS BY SKILL MATCH (HIGH → LOW)
         formattedJobs.sort((a, b) => b.skill_match_score - a.skill_match_score);
 
         setJobs(formattedJobs);
@@ -141,36 +178,6 @@ const Data = () => {
               ))}
             </div>
           </div>
-          <div className="recommended-jobs">
-            <h3>AI-Recommended Jobs</h3>
-            <div className="recommended-jobs-list">
-              {parsedResumeData.recommendedJobs
-                .slice(0, 5)
-                .map((job, index) => (
-                  <div key={index} className="recommended-job-card">
-                    <h4>{job.title}</h4>
-                    <p>Match Score: {job.similarity_score}%</p>
-                    {job.matching_skills && (
-                      <div className="matching-skills">
-                        <strong>Matching Skills:</strong>
-                        <div className="matching-skills-list">
-                          {job.matching_skills.slice(0, 3).map((skill, idx) => (
-                            <span key={idx} className="matching-skill-tag">
-                              {skill}
-                            </span>
-                          ))}
-                          {job.matching_skills.length > 3 && (
-                            <span className="more-skills">
-                              +{job.matching_skills.length - 3} more
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                ))}
-            </div>
-          </div>
         </div>
       )}
 
@@ -189,7 +196,7 @@ const Data = () => {
                 <div className="job-meta">
                   <span className="job-category">{job.category}</span>
                   <span className="skill-match-score">
-                    Skill Match: {job.skill_match_score}%
+                    Skill Match: {job.skill_match_score ?? 0}%
                   </span>
                   {/* <span className="matched-skill">
                     Matched via: {job.matched_skill}

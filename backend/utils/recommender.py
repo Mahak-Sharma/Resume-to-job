@@ -45,8 +45,8 @@ def recommend_jobs(user_skills, df, top_n=10):
         return []
     
     # Convert user skills to a single string for vectorization
-    user_skills_text = ' '.join(user_skills).lower()
-    
+    user_skills_text = " ".join([s.lower() for s in user_skills])
+
     # Process job skills from the dataset
     job_skills_texts = []
     job_titles = []
@@ -65,13 +65,13 @@ def recommend_jobs(user_skills, df, top_n=10):
         
         # Store the job title and skills
         job_titles.append(row['job_title'])
-        job_skills_text = ' '.join(job_skills)
+        job_skills_text = " ".join(job_skills)
         job_skills_texts.append(job_skills_text)
         all_skills_lists.append(job_skills)
     
     # Use ML approach: Convert skills to vectors using CountVectorizer
     # This creates a document-term matrix where each skill is a feature
-    vectorizer = CountVectorizer()
+    vectorizer = CountVectorizer(ngram_range=(1,2), lowercase=True)
     
     # Combine user skills and job skills for vectorization
     all_texts = [user_skills_text] + job_skills_texts
@@ -98,8 +98,8 @@ def recommend_jobs(user_skills, df, top_n=10):
             # Only include if there's some similarity
             if similarity > 0:
                 # Extract matching skills
-                user_skills_set = set(user_skills_text.split())
-                job_skills_set = set(job_skills_texts[i].split())
+                user_skills_set = set([s.lower() for s in user_skills])
+                job_skills_set = set(all_skills_lists[i])
                 matching_skills = list(user_skills_set.intersection(job_skills_set))
                 
                 # Create recommendation entry
@@ -110,7 +110,10 @@ def recommend_jobs(user_skills, df, top_n=10):
                 })
         
         # Sort by similarity score (highest first)
-        recommendations = sorted(recommendations, key=lambda x: x['similarity_score'], reverse=True)
+        recommendations.sort(
+        key=lambda x: (x["similarity_score"], len(x["matching_skills"])),
+        reverse=True
+        )
         
         return recommendations[:top_n]
     
